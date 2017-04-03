@@ -2,14 +2,17 @@
 
 import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String, Boolean, Date
 from sqlalchemy import ForeignKey
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
 Base = declarative_base()
 
 class User(Base):
 
-    __tablename__ = 'users'
-    id = Column(Integer, primary_key=True)
+    __tablename__ = 'Users'
+    user = Column(String, primary_key=True)
     name = Column(String)
     password = Column(String)
     usertype = Column(String)
@@ -20,17 +23,18 @@ class User(Base):
 
 class Machine(Base):
 
-    __tablename__ = 'machines'
-    id = Column(Integer, primary_key=True)
+    __tablename__ = 'Machines'
+    machineid = Column(Integer, primary_key=True)
+    
     ip = Column(String)
     nome = Column(String)
     compliance = Column(Boolean)
-    scanned = Column(Boolean)
+    scanned = Column(Date)
 
 class Compliance_attr(Base):
 
-    __tablename__ = "compliance_attr"
-    id = Column(Integer, primary_key=True,ForeignKey('machines.id'))
+    __tablename__ = "Compliance_attr"
+    machineid = Column(Integer, ForeignKey('Machines.machineid'),primary_key=True)
     observacoes = Column(String)
     proposito = Column(String)
     particionamento = Column(Boolean)
@@ -83,3 +87,6 @@ class Compliance_attr(Base):
     agents_config = Column(Boolean)
     sysstat_config = Column(Boolean)
 
+engine = create_engine('postgresql://postgres:postgres@localhost/postgres')
+Session = sessionmaker(bind=engine)
+Base.metadata.create_all(engine)
