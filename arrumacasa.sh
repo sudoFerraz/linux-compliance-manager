@@ -51,7 +51,7 @@ done
 
 cd /home
 useradd testezim
-USUARIOSADD=" andreo fillipe sthefano andrev pedrov vasconcelos fabriocios euclides roseval leandros osmar claudiaa gabrielandre matheusau jarbasf josermp luiz wagner  rendricson "
+USUARIOSADD=" andreo fillipe sthefano andrev pedrov vasconcelos fabriocios euclides roseval leandros osmar claudiaa gabrielandre matheusau jarbasf josermp luiz gferraz wagner  rendricson "
 for cria in $USUARIOSADD; do 
         cp -r /home/testezim /home/$cria
 		chown -R $cria:root $cria
@@ -105,7 +105,7 @@ cp /etc/group /tmp/group
 cat /etc/group | grep -v wheel > /tmp/group-bkp
 cp --reply=yes /tmp/group-bkp /etc/group 
 cp /tmp/group-bkp /etc/group 
-echo "wheel:x:10:root,andreo,andrev,pedrov,fabricios,vasconcelos,fillipe,sthefano,opsocsi" >> /etc/group
+echo "wheel:x:10:root,andreo,andrev,pedrov,fabricios,vasconcelos,gferraz,fillipe,sthefano,opsocsi" >> /etc/group
 
 echo "Configurando o Sudo"
 cp /etc/sudoers /etc/sudoers-bkp

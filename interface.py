@@ -23,8 +23,8 @@ class Menu(object):
         t.add_row(['[3]', 'Verificar maquinas ja escaneadas no DB'])
         t.add_row(['[4]', 'Escanear nova maquina'])
         t.add_row(['[5]', 'Escanear sub-rede'])
-        t.add_row(['[6]', 'Aplicar correcoes de compliance em uma certa maquina'])
-        t.add_row(['[7]', 'Deslogar'])
+        t.add_row(['[6]', 'Aplicar correcoes de compliance em uma maquina'])
+        t.add_row(['[7]', 'Deslogar.'])
         logado = PrettyTable(['Logado como:'])
         logado.add_row([self.userlogged])
         print logado
