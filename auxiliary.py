@@ -101,6 +101,12 @@ class user_handlers(object):
 			session.flush()
 			return userfound
 
+	def delete(self, session, userid):
+		userfound = session.query(Users).filter_by(user=userid).delete()
+		session.commit()
+		session.flush()
+
+
 	def handler_update_user(self, session, userid):
 		userfound = session.query(Users).filter_by(user=userid).first()
 		if not userfound:
@@ -132,6 +138,13 @@ class machine_handler(object):
 	def __init__(self):
 		self.machineid = ""
 		self.ip = ""
+
+	def delete(self, session, machineid):
+		foundmachine = session.query(Machines).\
+		filter_by(idmachine=machineid).delete()
+		session.commit()
+		session.flush
+
 
 	def get_machine_by_id(self, machineid, session):
 		foundmachine = session.query(Machines).filter_by(idmachine=machineid).first()
@@ -211,6 +224,22 @@ class machine_handler(object):
 		session.flush()
 		return foundmachine
 
+	def get_all_safe(self, session, idmaquina):
+		"""Retornando a pretty table"""
+		t = PrettyTable(['Id maquina', 'IP maquina'])
+		foundmachines = session.query(Machine).filter_by(compliance=True)
+		for foundmachine in foundmachines:
+			t.add_row([foundmachine.machineid, foundmachine.ip])
+		return t
+
+	def get_all_false(self, session, idmaquina):
+		"""Retornando a pretty table"""
+		t = PrettyTable(['ID maquina', 'Ip maquina'])
+		foundmachines = session.query(Machine).filter_by(compliance=False)
+		for foundmachine in foundmachines:
+			t.add_row([foundmachine.machineid, foundmachine.ip])
+		return t
+
 
 
 
@@ -219,7 +248,7 @@ class compliance_handlers(object):
 	def __init__():
 		self.machineid = ""
 
-	def get_machine_compliance_print(self, session, idmachine):
+	def get_print(self, session, idmachine):
 		"""Retornando print"""
 		foundmachine = session.query(Compliance_attr)\
 		.filter_by(machineid=idmachine).first()
@@ -229,8 +258,16 @@ class compliance_handlers(object):
 			j = PrettyTable(['Nome compliance', 'Valor'])
 			j.add_row([key, value])
 			print j
+			return j
 
-	def get_compliance(self, session, idmachine):
+	def delete(self, session, idmachine):
+		foundcompliance = session.query(Compliance_attr).\
+		filter_by(machineid=idmachine).delete()
+		session.commit()
+		session.flush()
+
+	def get(self, session, idmachine):
+		"""Retornando tabela full"""
 		foundcompliance = session.query(Compliance_attr)\
 		.filter_by(machineid=idmachine).first()
 		if not foundmachine:
@@ -240,7 +277,7 @@ class compliance_handlers(object):
 		else:
 			return False
 
-	def update_machine_unique_compliance(self, session, idmachine, attr):
+	def update_attr(self, session, idmachine, attr):
 		foundmachine = session.query(Compliance_attr)\
 		.filter_by(machineid=idmachine).first()
 		if not foundmachine:
@@ -262,7 +299,7 @@ class compliance_handlers(object):
 		else:
 			return False
 
-	def handle_cria_compliance(self, session, idmaquina):
+	def cria(self, session, idmaquina):
 		print "Criando compliance da maquina " + idmaquina
 		newcompliance = dbmodel.Compliance_attr(machineid=idmaquina)
 		session.add(newcompliance)
@@ -270,23 +307,7 @@ class compliance_handlers(object):
 		session.flush()
 		return newcompliance
 
-	def get_machines_compliance_true(self, session, idmaquina):
-		"""Retornando a pretty table"""
-		t = PrettyTable(['Id maquina', 'IP maquina'])
-		foundmachines = session.query(Machine).filter_by(compliance=True)
-		for foundmachine in foundmachines:
-			t.add_row([foundmachine.machineid, foundmachine.ip])
-		return t
-
-	def get_machines_compliance_false(self, session, idmaquina):
-		"""Retornando a pretty table"""
-		t = PrettyTable(['ID maquina', 'Ip maquina'])
-		foundmachines = session.query(Machine).filter_by(compliance=False)
-		for foundmachine in foundmachines:
-			t.add_row([foundmachine.machineid, foundmachine.ip])
-		return t
-
-	def handler_update_compliance_obs(self, session, idmaquina, newobs):
+	def update_obs(self, session, idmaquina, newobs):
 		compliancefound = session.query(Compliance_attr).\
 		filter_by(machineid=idmaquina).first()
 		if not compliancefound:
