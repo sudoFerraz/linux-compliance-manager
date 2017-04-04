@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import time
+import datetime
 import sys
 import sqlalchemy
 import os
@@ -126,7 +128,7 @@ def get_machine_compliance(session, idmachine):
 	else:
 		return False
 
-def update_machine_compliance(session, idmachine, attr):
+def update_machine_unique_compliance(session, idmachine, attr):
 	foundmachine = session.query(Compliance_attr)\
 	.filter_by(machineid=idmachine).first()
 	if not foundmachine:
@@ -185,11 +187,10 @@ def get_user():
 #handlers modificacao de maquinas users e compliances
 #handlers deleta dee maquinas users e compliances
 
-def handle_cria_maquina(session, idmaquina):
-	print "Adicionando maquina " + idmaquina
-	print "Digite o nome que voce gostaria de atribuir a esta maquina"
-	nomemachine = raw_input()
-	newmachine = dbmodel.Machine(machineid=idmaquina, nome=nomemachine)
+def handle_cria_maquina(session, idmaquina, nomemachine, \
+						scantime, compliancenew, ipmachine):
+	newmachine = dbmodel.Machine(machineid=idmaquina, nome=nomemachine\
+	, ip=ipmachine, scanned=scantime, compliance=compliancenew)
 	session.add(newmachine)
 	session.commit()
 	session.flush()
@@ -208,6 +209,27 @@ def handle_cria_compliance(session, idmaquina):
 	session.commit()
 	session.flush()
 
+def handle_update_machine_name(session, idmaquina, newnome):
+	foundmachine = session.query(Machine).filter_by(machineid=idmaquina).first()
+	foundmachine.nome = newnome
+	session.commit()
+	session.flush()
+
+
+
+def handle_update_machine_scan(session, idmaquina, newdate):
+	foundmachine = session.query(Machine).filter_by(machineid=idmaquina).first()
+	foundmachine.scanned = newdate
+	session.commit()
+	session.flush()
+
+def set_machine_scan_now(session, idmaquina):
+	foundmachine = session.query(Machine).filter_by(machineid=idmaquina).first()
+	foundmachine.scanned = datetime.datetime
+	session.commit()
+	session.flush()
+
+
 def get_machines_compliance_true(session, idmaquina):
 	"""Retornando a pretty table"""
 	t = PrettyTable(['Id maquina', 'IP maquina'])
@@ -222,6 +244,7 @@ def get_machines_compliance_false(session, idmaquina):
 	foundmachines = session.query(Machine).filter_by(compliance=False)
 	for foundmachine in foundmachines:
 		t.add_row([foundmachine.machineid, foundmachine.ip])
+	return t
 
 def handler_update_machine_compliance(session, idmaquina, boolean):
 	foundmachine = session.query(Machine).filter_by(machineid=idmaquina).first()
@@ -238,6 +261,27 @@ def handler_update_machine_ip(session, idmaquina, ipnovo):
 	session.commit()
 	session.flush()
 	return foundmachine
+
+def handler_update_user_type(session, userid, newtype):
+	"""Fazer a verificacao de permissoes previamente"""
+	founduser = session.query(User).filter_by(machineid=idmaquina).first()
+	if not founduser:
+		return False
+	founuser.usertype = newtype
+	session.commit()
+	session.flush()
+
+def handler_update_compliance_obs(session, idmaquina, newobs):
+	compliancefound = session.query(Compliance_attr).\
+	filter_by(machineid=idmaquina).first()
+	if not compliancefound:
+		return False
+	compliancefound.observacoes = newobs
+	session.commit()
+	session.flush()
+	return compliancefound
+
+def
 
 def handler_update_user_password(session, userid, newpass):
 	userfound = session.query(User).filter_by(user=userid).first()
@@ -280,7 +324,12 @@ def handler_update_user(session, userid):
 
 
 session = dbconnection(22, 33, 44, 55)
-eu = handler_update_user_password(session, "gferraz", "teste")
+now = time.strftime("%c")
+print now
+maquinadoida = handle_cria_maquina(session, "NTB", "maquinadoida", \
+									now, True, "192.168.444.15")
+
+
 
 
 
