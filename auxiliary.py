@@ -216,6 +216,13 @@ def get_machines_compliance_true(session, idmaquina):
 		t.add_row([foundmachine.machineid, foundmachine.ip])
 	return t
 
+def get_machines_compliance_false(session, idmaquina):
+	"""Retornando a pretty table"""
+	t = PrettyTable(['ID maquina', 'Ip maquina'])
+	foundmachines = session.query(Machine).filter_by(compliance=False)
+	for foundmachine in foundmachines:
+		t.add_row([foundmachine.machineid, foundmachine.ip])
+
 def handler_update_machine_compliance(session, idmaquina, boolean):
 	foundmachine = session.query(Machine).filter_by(machineid=idmaquina).first()
 	if not foundmachine:
