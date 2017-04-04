@@ -15,14 +15,14 @@ class Menu(object):
         #implementar a sessão do sqlalchemy
         self.Session = auxiliary.ferramenta.dbconnection(22, 33, 44, 55)
         self.userlogged = ''
+        self.permissions = 0
 
     def menuinicial(self):
         t = PrettyTable(['[+] Option', '[+] Descricao'])
         t.add_row(['[1]', 'Criar um novo usuario'])
-        t.add_row(['[2]', 'Logar como usuario do sistema'])
         t.add_row(['[3]', 'Verificar maquinas ja escaneadas no DB'])
-        t.add_row(['[4]', 'Escanear nova maquina'])
-        t.add_row(['[5]', 'Escanear sub-rede'])
+        t.add_row(['[4]', 'Verificar nova maquina'])
+        t.add_row(['[5]', 'Verificar sub-rede'])
         t.add_row(['[6]', 'Aplicar correcoes de compliance em uma maquina'])
         t.add_row(['[7]', 'Deslogar.'])
         logado = PrettyTable(['Logado como:'])

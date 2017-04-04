@@ -2,7 +2,7 @@
 
 import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Boolean, Date, Datetime
+from sqlalchemy import Column, Integer, String, Boolean, Date, DATETIME
 from sqlalchemy import ForeignKey
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -30,7 +30,7 @@ class Machine(Base):
     ip = Column(String)
     nome = Column(String)
     compliance = Column(Boolean)
-    scanned = Column(Datetime, server_default=func.now())
+    scanned = Column(DATETIME, server_default=func.now())
 
 class Compliance_attr(Base):
 

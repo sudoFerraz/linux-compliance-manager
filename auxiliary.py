@@ -28,6 +28,13 @@ class ostools(object):
 	def executa_arruma_casa(self):
 		os.system('./arrumacasa.sh')
 
+	def rotina_atualizacao(self, ip, machineid):
+		while True:
+			os.system('sudo apt-get update')
+			os.system('sudo apt-get upgrade')
+			sleep(10000)
+
+
 	def sshconnection(self, ip, port, username, password):
 		ssh = paramiko.SSHClient()
 		ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -334,12 +341,6 @@ ferramenta = ostools()
 session = ferramenta.dbconnection(22, 33, 44, 55)
 now = time.strftime("%c")
 print now
-
-compliancedoido = session.query(Compliance_attr).filter_by(machineid="NTB").first()
-compliancedoido.particionamento = True
-compliancedoido.timezone = True
-session.commit()
-session.flush
 
 
 
