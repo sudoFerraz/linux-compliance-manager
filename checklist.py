@@ -21,8 +21,7 @@ def update():
     print "program output:", out
 
 def gatherinfo():
-    out = platform.uname()
-    out = out + " " + platform.platform() + " " + platform.system()
+    out = str(platform.uname() + " " + platform.platform() + " " + platform.system())
     guardaresultado("SO", out)
     print out
 
