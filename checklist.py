@@ -1,5 +1,6 @@
 import os
 import subprocess
+import platform
 
 def timezone():
     out = os.popen('timedatectl | grep \'Time\( zone\|zone\)\'').read()
@@ -19,4 +20,11 @@ def update():
     (out, err) = proc.comunicate()
     print "program output:", out
 
+def gatherinfo():
+    out = platform.uname()
+    out = out + " " + platform.platform() + " " + platform.system()
+    guardaresultado("SO", out)
+    print out
+
 timezone()
+gatherinfo()
