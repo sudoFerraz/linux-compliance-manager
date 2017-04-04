@@ -8,9 +8,9 @@ def timezone():
 
 
 def guardaresultado(op, res):
-    f = open("resultado.txt", "w")
-    f.write(op)
-    f.write(res)
+    f = open("resultado.txt", "a")
+    f.write(op + "\n")
+    f.write(res + "\n")
     f.close()
 
 
