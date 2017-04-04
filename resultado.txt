@@ -11,3 +11,20 @@ timezone
 timezone
        Time zone: UTC (UTC, +0000)
 
+timezone
+
+timezone
+
+SO
+('Windows', 'WKS-CEL19085', '7', '6.1.7601', 'AMD64', 'Intel64 Family 6 Model 60 Stepping 3, GenuineIntel')Windows-7-6.1.7601-SP1
+timezone
+
+timezone
+
+timezone
+
+SO
+timezone
+
+SO
+[('Windows', 'WKS-CEL19085', '7', '6.1.7601', 'AMD64', 'Intel64 Family 6 Model 60 Stepping 3, GenuineIntel'), 'Windows-7-6.1.7601-SP1', 'Windows']
