@@ -1,12 +1,21 @@
-import auxiliary
-import dbmodel
-import sqlalchemy
 import os
-import sys
-import paramiko
-import hashlib
-from prettytable import PrettyTable
-from sqlalchemy import inspect
+import subprocess
 
 def timezone():
-    os.system('timedatectl | grep \"Timezone\"')
+    out = os.popen('timedatectl | grep \"Timezone\"').read()
+    guardaresultado("timezone", out)
+
+
+def guardaresultado(op, res):
+    f = open("resultado.txt", "w")
+    f.write(op)
+    f.write(res)
+    f.close()
+
+
+def update():
+    proc = subprocess.Popen(["yum", "-y", "update"], stdout=subprocess.PIPE, shell=True)
+    (out, err) = proc.comunicate()
+    print "program output:", out
+
+timezone()
