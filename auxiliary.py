@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import sys
 import sqlalchemy
 import os
@@ -5,7 +7,7 @@ import paramiko
 import hashlib
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from pexpect import pxssh
+
 from dbmodel import User, Machine, Compliance_attr
 from prettytable import PrettyTable
 import dbmodel
@@ -43,7 +45,7 @@ def handle_cria_user(session):
 	usernew = raw_input()
 	print "Digite senha forte"
 	passnew = raw_input()
-	newuser = dbmodel.User(user=usernew, passw=passnew)
+	newuser = dbmodel.User(user=usernew, password=passnew)
 	session.add(newuser)
 	session.commit()
 	session.flush()
@@ -148,7 +150,7 @@ def update_machine_compliance(session, idmachine, attr):
 
 
 def get_user(session, userid):
-	founduser = sesison.query(Users).filter_by(user=userid).first()
+	founduser = session.query(Users).filter_by(user=userid).first()
 	if not founduser:
 		return False
 	if founduser.user == userid:
@@ -179,21 +181,100 @@ def get_user():
 	user = os.environ.get('USER')
 	return user
 
+#handlers criacao de maquinas e compliances
+#handlers modificacao de maquinas users e compliances
+#handlers deleta dee maquinas users e compliances
+
+def handle_cria_maquina(session, idmaquina):
+	print "Adicionando maquina " + idmaquina
+	print "Digite o nome que voce gostaria de atribuir a esta maquina"
+	nomemachine = raw_input()
+	newmachine = dbmodel.Machine(machineid=idmaquina, nome=nomemachine)
+	session.add(newmachine)
+	session.commit()
+	session.flush()
+	return newmachine
+
+def handle_checklist(session, idmaquina):
+	t = PrettyTable(['Opcao', 'O que deseja fazer agora?'])
+	t.add_row(['1', 'Executar arrumacasa.sh nesta máquina remotamente agora'])
+	t.add_row(['2', 'Escanear a maquina e fazer um checklist dos conformes'])
+	t.add_row(['3', ''])
+
+def handle_cria_compliance(session, idmaquina):
+	print "Criando compliance da maquina " + idmaquina
+	newcompliance = dbmodel.Compliance_attr(machineid=idmaquina)
+	session.add(newcompliance)
+	session.commit()
+	session.flush()
+
+def get_machines_compliance_true(session, idmaquina):
+	"""Retornando a pretty table"""
+	t = PrettyTable(['Id maquina', 'IP maquina'])
+	foundmachines = session.query(Machine).filter_by(compliance=True)
+	for foundmachine in foundmachines:
+		t.add_row([foundmachine.machineid, foundmachine.ip])
+	return t
+
+def handler_update_machine_compliance(session, idmaquina, boolean):
+	foundmachine = session.query(Machine).filter_by(machineid=idmaquina).first()
+	if not foundmachine:
+		return False
+	foundmachine.compliance = boolean
+	return foundmachine
+
+def handler_update_machine_ip(session, idmaquina, ipnovo):
+	foundmachine = session.query(Machine).filter_by(machineid=idmaquina).first()
+	if not foundmachine:
+		return False
+	foundmachine.ip = ipnovo
+	session.commit()
+	session.flush()
+	return foundmachine
+
+def handler_update_user_password(session, userid, newpass):
+	userfound = session.query(User).filter_by(user=userid).first()
+	if not userfound:
+		return False
+	if userfound.user == userid:
+		userfound.password = newpass
+		#session.add(userfound)
+		session.commit()
+		session.flush()
+		return userfound
+
+
+def handler_update_user(session, userid):
+	userfound = session.query(Users).filter_by(user=userid).first()
+	if not userfound:
+		return False
+	if userfound.user == userid:
+		t = PrettyTable(['Opcao', 'O que deseja modificar?'])
+		t.add_row(['1', 'Modificar a senha'])
+		t.add_row(['2', 'Modificar o tipo do usuario'])
+		t.add_row(['3', 'Sair para o contexto anterior'])
+		input(x)
+		if x == 1:
+			print "Digite a nova senha"
+			raw_input(x1)
+			print "Digite a nova senha novamente"
+			raw_input(x2)
+			if x1 == x2:
+				founduser = session.query(User).filter_by(user=userid).first()
+				founduser.password = x1
+			else:
+				print "Voce errou a senha, voltando ao menu"
+				return founduser
+		if x == 2:
+			pass
+
+
+
+
+
 session = dbconnection(22, 33, 44, 55)
-usernew = "gferraz"
-namenew = "Gabriel Ferraz"
-passwordnew = "123"
-usertypenew = "admin"
-#newuser = dbmodel.User(user=usernew, password=passwordnew, \
-#	usertype=usertypenew, name=namenew)
-#session.add(newuser)
-eu = session.query(User).filter_by(user=usernew).first()
-doido = "usertype"
-eu.doido = "LUL"
-session.add(eu)
-session.commit()
-session.flush()
-print eu.usertype
+eu = handler_update_user_password(session, "gferraz", "teste")
+
 
 
 

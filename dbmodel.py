@@ -24,8 +24,8 @@ class User(Base):
 class Machine(Base):
 
     __tablename__ = 'Machines'
-    machineid = Column(Integer, primary_key=True)
-    
+    machineid = Column(String, primary_key=True)
+
     ip = Column(String)
     nome = Column(String)
     compliance = Column(Boolean)
@@ -34,7 +34,7 @@ class Machine(Base):
 class Compliance_attr(Base):
 
     __tablename__ = "Compliance_attr"
-    machineid = Column(Integer, ForeignKey('Machines.machineid'),primary_key=True)
+    machineid = Column(String, ForeignKey('Machines.machineid'),primary_key=True)
     observacoes = Column(String)
     proposito = Column(String)
     particionamento = Column(Boolean)
