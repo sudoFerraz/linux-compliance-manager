@@ -4,7 +4,7 @@
 
 import sqlalchemy
 from prettytable import PrettyTable
-
+import auxiliary
 
 class Menu(object):
     """Menu para selecionar opções"""
@@ -13,7 +13,7 @@ class Menu(object):
         self.alive = 1
         self.logged = 0
         #implementar a sessão do sqlalchemy
-        self.Session = None
+        self.Session = auxiliary.ferramenta.dbconnection(22, 33, 44, 55)
         self.userlogged = ''
 
     def menuinicial(self):
@@ -29,6 +29,26 @@ class Menu(object):
         logado.add_row([self.userlogged])
         print logado
         print t
+
+    def handle_logon(self):
+    	print "Digite usuario (algartelecom)"
+    	usertry = raw_input()
+    	print "Digite senha"
+    	passtry = raw_input()
+    	founduser = self.session.query(User).filter_by(user=usertry).first()
+    	if not founduser:
+    		print "Login incorreto, tente novamente"
+    		return False
+    	if founduser.user == usertry:
+    		if founduser.password == passtry:
+    			print "Login efetuado com sucesso como" + founduser.user
+    			return founduser.user
+    		else:
+    			print "Login incorreto, tente novamente"
+    			return False
+    	else:
+    		print "Login incorreto, tente novamente"
+    		return False
 
 firstone = Menu()
 firstone.menuinicial()
