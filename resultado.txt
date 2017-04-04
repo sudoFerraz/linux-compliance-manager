@@ -1,1 +1,1 @@
-timezone
+timezone       Time zone: UTC (UTC, +0000)

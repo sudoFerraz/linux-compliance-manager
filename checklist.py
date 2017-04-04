@@ -2,8 +2,9 @@ import os
 import subprocess
 
 def timezone():
-    out = os.popen('timedatectl | grep \"Timezone\"').read()
+    out = os.popen('timedatectl | grep \'Time\( zone\|zone\)\'').read()
     guardaresultado("timezone", out)
+    print out
 
 
 def guardaresultado(op, res):
