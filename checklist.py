@@ -11,14 +11,15 @@ def timezone():
 def guardaresultado(op, res):
     f = open("resultado.txt", "a")
     f.write(op + "\n")
-    f.write(res + "\n")
+    f.write(res + "\n\n")
     f.close()
 
 
 def update():
-    proc = subprocess.Popen(["yum", "-y", "update"], stdout=subprocess.PIPE, shell=True)
-    (out, err) = proc.comunicate()
-    print "program output:", out
+    out = os.popen('yum -y update').read()
+    if out == "":
+        out = "OK"
+    guardaresultado("update", out)
 
 def gatherinfo():
     out = []
@@ -27,13 +28,15 @@ def gatherinfo():
     out.append(platform.system())
     out = str(out)
     guardaresultado("SO", out)
-    print out
 
 def selinux():
-    out.append(os.popen('echo \'SELINUX = enforcing\' >> /etc/selinux/config'))
+    out = os.popen('echo \'SELINUX = enforcing\' >> /etc/selinux/config').read()
+    if out == "":
+        out = "OK"
     guardaresultado("selinux", out)
     
 
-
-timezone()
 gatherinfo()
+timezone()
+update()
+selinux()

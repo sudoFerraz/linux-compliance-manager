@@ -1,30 +1,20 @@
-timezone       Time zone: UTC (UTC, +0000)
-timezone
-       Time zone: UTC (UTC, +0000)
-
-timezone
-       Time zone: UTC (UTC, +0000)
-
-timezone
-       Time zone: UTC (UTC, +0000)
-
-timezone
-       Time zone: UTC (UTC, +0000)
-
-timezone
-
-timezone
 
 SO
-('Windows', 'WKS-CEL19085', '7', '6.1.7601', 'AMD64', 'Intel64 Family 6 Model 60 Stepping 3, GenuineIntel')Windows-7-6.1.7601-SP1
-timezone
+[('Linux', 'validaservers', '3.10.0-229.14.1.el7.x86_64', '#1 SMP Tue Sep 15 15:05:51 UTC 2015', 'x86_64', 'x86_64'), 'Linux-3.10.0-229.14.1.el7.x86_64-x86_64-with-centos-7.3.1611-Core', 'Linux']
 
 timezone
+       Time zone: UTC (UTC, +0000)
 
-timezone
 
-SO
-timezone
+update
+Loaded plugins: fastestmirror
+Loading mirror speeds from cached hostfile
+ * base: centos.xpg.com.br
+ * extras: centos.xpg.com.br
+ * updates: centos.xpg.com.br
+No packages marked for update
 
-SO
-[('Windows', 'WKS-CEL19085', '7', '6.1.7601', 'AMD64', 'Intel64 Family 6 Model 60 Stepping 3, GenuineIntel'), 'Windows-7-6.1.7601-SP1', 'Windows']
+
+selinux
+OK
+
