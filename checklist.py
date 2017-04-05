@@ -15,7 +15,11 @@ def guardaresultado(op, res):
 
 
 def update():
+#checar se o asterisco fica no comando
     out = os.popen('yum -y update').read()
+    if out == "":
+        out = "OK"
+    out = os.popen('echo exclude=kernel* >> /etc/yum.conf')
     if out == "":
         out = "OK"
     guardaresultado("update", out)
@@ -36,9 +40,9 @@ def selinux():
 
 def check_empty_output(out):
     if out is "":
-        return True
+        return "OK"
     else:
-        return False
+        return "ERRO"
 
 def grubconfig():
     out = os.popen('rm -rf /var/spool/cron/root-bkp').read()
