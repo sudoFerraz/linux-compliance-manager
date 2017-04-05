@@ -1,11 +1,10 @@
 import os
-import subprocess
+#import subprocess
 import platform
 
 def timezone():
     out = os.popen('timedatectl | grep \'Time\( zone\|zone\)\'').read()
     guardaresultado("timezone", out)
-    print out
 
 
 def guardaresultado(op, res):
@@ -36,32 +35,27 @@ def selinux():
     guardaresultado("selinux", out)
 
 def check_empty_output(out):
-    if out is None:
+    if out is "":
         return True
     else:
         return False
 
 def grubconfig():
     out = os.popen('rm -rf /var/spool/cron/root-bkp').read()
-    if not check_empty_output(out):
+    if out <> "":
         guardaresultado("GRUB", out)
     out = os.popen('cat /etc/grub.conf | grep -v \'password --md5\' > /tmp/grub.conf').read()
-    if not check_empty_output(out):
+    if out <> "":
         guardaresultado("GRUB", out)
     out = os.popen('sed -i -e \"s/timeout=5/npassword --md5 \$1\$pnpAU1\$z0thj45iKl\/MBf\/XkrtNb1/g\" /tmp/grub.conf').read()
-    if not check_empty_output(out):
+    if out <> "":
         guardaresultado("GRUB", out)
     out = os.popen('rm -rf /etc/grub.conf').read()
-    if not check_empty_output(out):
+    if out <> "":
         guardaresultado("GRUB", out)
     out = os.popen('cp /tmp/grub.conf /etc/grub.conf').read()
-    if not check_empty_output(out):
+    if out == "":
         guardaresultado("GRUB", "OK")
 
 
 
-
-gatherinfo()
-timezone()
-update()
-selinux()
