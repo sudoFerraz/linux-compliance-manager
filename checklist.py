@@ -39,7 +39,11 @@ def selinux():
     guardaresultado("selinux", out)
 
 def check_empty_output(out):
-    if out is "":
+    if out == "":
+        return "OK"
+    if out is None:
+        return "OK"
+    if out == '':
         return "OK"
     else:
         return "ERRO"
@@ -48,18 +52,30 @@ def grubconfig():
     out = os.popen('rm -rf /var/spool/cron/root-bkp').read()
     if out <> "":
         guardaresultado("GRUB", out)
+        return False
     out = os.popen('cat /etc/grub.conf | grep -v \'password --md5\' > /tmp/grub.conf').read()
     if out <> "":
         guardaresultado("GRUB", out)
+        return False
     out = os.popen('sed -i -e \"s/timeout=5/npassword --md5 \$1\$pnpAU1\$z0thj45iKl\/MBf\/XkrtNb1/g\" /tmp/grub.conf').read()
     if out <> "":
         guardaresultado("GRUB", out)
+        return False
     out = os.popen('rm -rf /etc/grub.conf').read()
     if out <> "":
         guardaresultado("GRUB", out)
+        return False
     out = os.popen('cp /tmp/grub.conf /etc/grub.conf').read()
     if out == "":
         guardaresultado("GRUB", "OK")
 
+def disable_ipv6():
+    out = os.popen('sysctl -w net.ipv6.conf.default.disable_ipv6=1').read()
+    out = os.popen('sysctl -w net.ipv6.conf.all.disable_ipv6=1').read()
+    out = os.popen('echo net.ipv6.conf.all.disable_ipv6=1 >> /etc/sysctl.conf').read()
+    out = os.popen('echo net.ipv6.conf.default.disable_ipv6=1 >> /etc/sysctl.conf').read()
+    out = os.popen('echo net.ipv6.conf.lo.disable_ipv6=1 >> /etc/sysctl.conf').read()
+    out = check_empty_output(out)
+    guardaresultado("IPV6", out)
 
 
