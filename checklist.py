@@ -91,4 +91,4 @@ def crontab_config():
     out = check_empty_output(out)
     guardaresultado("CRONTAB", out)
 
-
+disable_ipv6()
