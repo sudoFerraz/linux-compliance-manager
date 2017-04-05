@@ -29,5 +29,11 @@ def gatherinfo():
     guardaresultado("SO", out)
     print out
 
+def selinux():
+    out.append(os.popen('echo \'SELINUX = enforcing\' >> /etc/selinux/config'))
+    guardaresultado("selinux", out)
+    
+
+
 timezone()
 gatherinfo()
