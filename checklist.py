@@ -30,7 +30,7 @@ def gatherinfo():
     guardaresultado("SO", out)
 
 def selinux():
-    out = os.popen('echo \'SELINUX = enforcing\' >> /etc/selinux/config').read()
+    out = os.popen('echo \'SELINUX=enforcing\' >> /etc/selinux/config').read()
     if out == "":
         out = "OK"
     guardaresultado("selinux", out)
