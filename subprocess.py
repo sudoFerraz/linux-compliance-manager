@@ -13,7 +13,7 @@ import sys
 #   print "output>>>> ",output
 
 try:
-    res = subprocess.Popen(['dir'],stdout=subprocess.PIPE,stderr=subprocess.PIPE);
+    res = subprocess.Popen(['ls'],stdout=subprocess.PIPE,stderr=subprocess.PIPE);
     #res = subprocess.Popen(['xls','-al','/home'],stdout=subprocess.PIPE);
     output,error = res.communicate()
     if output:

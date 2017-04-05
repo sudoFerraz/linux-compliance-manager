@@ -34,7 +34,21 @@ def selinux():
     if out == "":
         out = "OK"
     guardaresultado("selinux", out)
+
+def check_empty_output(out):
+    if out is None:
+        return True
+    else:
+        return False
     
+def grubconfig():
+    out = os.popen('rm -rf /var/spool/cron/root-bkp').read()
+    if out:
+        out = "ERROR"
+        guardaresultado("GRUB", out)
+    
+    
+
 
 gatherinfo()
 timezone()
