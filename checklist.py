@@ -78,4 +78,17 @@ def disable_ipv6():
     out = check_empty_output(out)
     guardaresultado("IPV6", out)
 
+def crontab_config():
+    out = os.popen('yum -y install ntpdate').read()
+    out = os.popen('rm -rf /var/spool/cron/root-bkp').read()
+    out = os.popen('/usr/sbin/ntpdate -u 10.32.9.230 && /sbin/hwclock --systohc').read()
+    out = os.popen('cat /var/spool/cron/root | grep -v ntpdate | grep -v hwclock | grep -v \
+\'Check List\' | grep -v \'################\' > /var/spool/cron/root-bkp').read()
+    out = os.popen('rm -rf /var/spool/cron/root').read()
+    out = os.popen('echo \"######### Check List de Seguranca #################\n0,15,30,45 * * * * /usr/sbin/ntpdate -u 10.32.9.230\n0,15,30,45 * * * * /sbin/hwclock --systohc\n###################################################\" >> /var/spool/cron/root-bkp').read()
+    out = os.popen('cp /var/spool/cron/root-bkp /var/spool/cron/root').read()
+    print out
+    out = check_empty_output(out)
+    guardaresultado("CRONTAB", out)
+
 
