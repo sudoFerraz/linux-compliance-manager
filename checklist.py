@@ -2,7 +2,7 @@ import os
 #import subprocess
 import platform
 
-def timezone():
+def timezone_check():
     out = os.popen('timedatectl | grep \'Time\( zone\|zone\)\'').read()
     guardaresultado("timezone", out)
 
@@ -14,12 +14,17 @@ def guardaresultado(op, res):
     f.close()
 
 
+def update_check():
+    out = os.popen('cat /etc/yum.conf | grep \'exclude(=kernel| =kernel| = kernel)\'').read()
+    out = check_empty_output(out)
+    guardaresultado("UPDATE", out)
+
 def update():
 #checar se o asterisco fica no comando
     out = os.popen('yum -y update').read()
     if out == "":
         out = "OK"
-    out = os.popen('echo exclude=kernel* >> /etc/yum.conf')
+    out = os.popen('echo exclude=kernel* >> /etc/yum.conf').read()
     if out == "":
         out = "OK"
     guardaresultado("update", out)
@@ -91,4 +96,5 @@ def crontab_config():
     out = check_empty_output(out)
     guardaresultado("CRONTAB", out)
 
-disable_ipv6()
+update_check()
+update()
