@@ -1,33 +1,3 @@
-
-CRONTAB
-OK
-
 IPV6
-OK
-
-timezone
-       Time zone: UTC (UTC, +0000)
-
-
-UPDATE
-OK
-
-UPDATE
-OK
-
-UPDATE
-OK
-
-update
-UPDATE
-OK
-
-update
-OK
-
-UPDATE
-OK
-
-update
-OK
+FALSE
 

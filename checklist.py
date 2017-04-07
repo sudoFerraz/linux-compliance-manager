@@ -1,4 +1,5 @@
 import os
+#
 #import subprocess
 import platform
 
@@ -37,6 +38,14 @@ def gatherinfo():
     out = str(out)
     guardaresultado("SO", out)
 
+def check_selinux():
+    out = os.popen('cat /etc/selinux/config').read()
+    string = "SELINUX=enforcing"
+    if string in out:
+        guardaresultado("SELINUX", "TRUE")
+    else:
+        guardaresultado("SELINUX", "TRUE")
+
 def selinux():
     out = os.popen('echo \'SELINUX=enforcing\' >> /etc/selinux/config').read()
     if out == "":
@@ -53,7 +62,7 @@ def check_empty_output(out):
     else:
         return "ERRO"
 
-def grubconfig():
+def grub_config():
     out = os.popen('rm -rf /var/spool/cron/root-bkp').read()
     if out <> "":
         guardaresultado("GRUB", out)
@@ -74,6 +83,18 @@ def grubconfig():
     if out == "":
         guardaresultado("GRUB", "OK")
 
+def check_ipv6():
+    out = os.popen('cat /etc/sysctl.conf | grep \"ipv6\"').read()
+    string = "net.ipv6.conf.default.disable_ipv6=1"
+    if string in out:
+        string = "net.ipv6.conf.all.disable_ipv6=1"
+        if string in out:
+            guardaresultado("IPV6", "TRUE")
+        else:
+            guardaresultado("IPV6", "TRUE-1")
+    else:
+        guardaresultado("IPV6", "FALSE")
+
 def disable_ipv6():
     out = os.popen('sysctl -w net.ipv6.conf.default.disable_ipv6=1').read()
     out = os.popen('sysctl -w net.ipv6.conf.all.disable_ipv6=1').read()
@@ -82,6 +103,14 @@ def disable_ipv6():
     out = os.popen('echo net.ipv6.conf.lo.disable_ipv6=1 >> /etc/sysctl.conf').read()
     out = check_empty_output(out)
     guardaresultado("IPV6", out)
+
+def crontab_check():
+    out = os.popen('cat /var/spool/cron/root').read()
+    string = "######### Check List de Seguranca #################\n0,15,30,45 * * * * /usr/sbin/ntpdate -u 10.32.9.230\n0,15,30,45 * * * * /sbin/hwclock --systohc\n###################################################"
+    if string in out:
+        guardaresultado("CRONTAB", "TRUE")
+    else:
+        guardaresultado("CRONTAB", "TRUE")
 
 def crontab_config():
     out = os.popen('yum -y install ntpdate').read()
@@ -96,5 +125,4 @@ def crontab_config():
     out = check_empty_output(out)
     guardaresultado("CRONTAB", out)
 
-update_check()
-update()
+check_ipv6()
