@@ -249,7 +249,7 @@ def check_sshprotocol():
 	else:
 		guardaresultado("SSHPROTOCOL", "FALSE")
 
-def ssh_portforwarding():
+def check_ssh_portforwarding():
 	out = os.popen('cat /etc/ssh/sshd_config | grep -w \"AllowTcpForwarding no\"').read()
 	if out:
 		out = os.popen('cat /etc/ssh/sshd_config | grep -w \"GatewayPorst no\"').read()
@@ -265,15 +265,27 @@ def ssh_portforwarding():
 		guardaresultado("SSHPORTFORWARDING", "FALSE")
 
 #Ver se realmente e StrictModeS como no documento ou StricMode
-def ssh_strict_mode():
+def check_ssh_strict_mode():
 	out = os.popen('cat /etc/ssh/sshd_config | grep -w \"StricModes yes\"').read()
 	if out:
 		guardaresultado("SSHSTRICTMODE", "TRUE")
 	else:
 		guardaresultado("SSHSTRICTMODE", "FALSE")
 
-def 
+def check_ssh_bannerconf():
+	out = os.popen('cat /etc/ssh/sshd_config | grep -w \"Banner /etc/issue.net\"').read()
+	if out:
+		guardaresultado("SSHBANNER", "TRUE")
+	else:
+		guardaresultado("SSHBANNER", "FALSE")
 
+
+def check_sftp():
+	out = os.popen('cat /etc/ssh/sshd_config | grep -w \"#Subsystem   sftp   /usr/libexec/sftp-server\"').read()
+	if out:
+		guardaresultado("SFTP", "TRUE")
+	else:
+		guardaresultado("SFTP", "FALSE")
 
 
 
