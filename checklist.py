@@ -287,6 +287,49 @@ def check_sftp():
 	else:
 		guardaresultado("SFTP", "FALSE")
 
+def check_systatconfig():
+	out = os.popen('cat /etc/sysconfig/sysstat | grep -w \"HISTORY=30\"').read()
+	if out:
+		out = os.popen('cat /etc/sysconfig/sysstat | grep -w \"COMPRESSAFTER=2\"').read()
+		if out:
+			out = os.popen('cat /etc/cron.d/sysstat | grep -w \"*/10 * * * * root /usr/lib64/sa/sa1 1 1\"').read()
+			if out:
+				out = os.popen('cat /etc/cron.d/sysstat | grep -w \"53 23 * * * root /usr/lib64/sa/sa2 -A\"').read()
+				if out:
+					guardaresultado("SYSSTATCONFIG", "TRUE")
+				else:
+					guardaresultado("SYSSTATCONFIG", "TRUE-1")
+			else:
+				guardaresultado("SYSSTATCONFIG", "TRUE-2")
+		else:
+			guardaresultado("SYSSTATCONFIG", "TRUE-3")
+	else:
+		guardaresultado("SYSSTATCONFIG", "FALSE")
+
+
+def check_blankpass_ssh():
+	out = os.popen('cat /etc/ssh/sshd_config | grep -w \"PermitEmptyPasswords no\"').read()
+	if out:
+		guardaresultado("BLANKSSHPASS", "TRUE")
+	else:
+		guardaresultado("BLANKSSHPASS", "FALSE")
+
+def check_rootuid():
+	out = os.popen('getent passwd | awk -F: \'$3 == \"0\" { print $1 }\' ').read()
+	if out == "root":
+		guardaresultado("ROOTUID", "TRUE")
+	else:
+		guardaresultado("ROOTUID", "FALSE")
+
+def check_userwithblankpass():
+	out = os.popen('cat /etc/shadow | awk -F: \'$2 == \"!!\" { print $1 }\'').read()
+	if out:
+		guardaresultado("USERBLANKPASS", "TRUE")
+	else:
+		guardaresultado("USERBLANKPASS", "FALSE")
+
+
+
 
 
 def check_banner():
