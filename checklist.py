@@ -161,6 +161,122 @@ def check_umask():
     else:
         guardaresultado("UMASK", "FALSE")
 
+def check_log_centralizado():
+	out = os.popen('cat /etc/syslog.conf | grep \"REPLICAR SERVIDOR DE LOG\"').read()
+	if out:
+		guardaresultado("LOG_CENTRALIZADO", "TRUE")
+	else:
+		guardaresultado("LOG_CENTRALIZADO", "FALSE")
+
+def check_datetime_bash():
+	out = os.popen('cat /etc/profile | grep \"CHECK LIST DE SEGURANCA\"').read()
+	if out:
+		guardaresultado("DATETIME_BASH", "TRUE")
+	else:
+		guardaresultado("DATETIME_BASH", "FALSE")
+
+def check_coredumps():
+	out = os.popen('cat /etc/security/limits.conf | grep \"CHECK LIST DE SEGURANCA\"').read()
+	if out:
+		guardaresultado("COREDUMPS", "TRUE")
+	else:
+		guardaresultado("COREDUMPS", "FALSE")
+
+#Fazer para os outros sistemas operacionais
+def check_passcomplexity_redhat58():
+	out = os.popen('cat /etc/pam.d/system-auth | grep \"password    requisite     pam_cracklib.so try_first_pass retry=3 minlen=8 dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1\"').read()
+	if out:
+		guardaresultado("PASSCOMPLEXITY", "TRUE")
+	else:
+		guardaresultado("PASSCOMPLEXITY", "FALSE")
+
+#Fazer para os outros sistemas operacionais
+def check_bruteforce_redhat58():
+	out = os.popen('cat /etc/pam.d/system-auth | grep \"auth        required      pam_tally2.so deny=5 onerr=fail unlock_time=1800\"').read()
+	if out:
+		out = os.popen('cat /etc/pam.d/system-auth |grep \"account     required      pam_tally.so\"').read()
+		if out:
+			guardaresultado("BRUTEFORCE", "TRUE")
+		else:
+			guardaresultado("BRUTEFORCE", "TRUE-1")
+	else:
+		guardaresultado("BRUTEFORCE", "FALSE")
+
+#Fazer para os outros sistemas operacionais
+def check_rememberpass_redhat58():
+	out = os.popen('cat /etc/pam.d/system-auth | grep \"password    sufficient    pam_unix.so md5 shadow nullok try_first_pass use_authtok remember=15\"').read()
+	if out:
+		guardaresultado("REMEMBERPASS", "TRUE")
+	else:
+		guardaresultado("REMEMBERPASS", "FALSE")
+
+def check_loginpolicy():
+	out = os.popen('cat /etc/login.defs | grep \"CHECK LIST DE SEGURANCA\"').read()
+	if out:
+		out = os.popen('cat /etc/default/useradd | grep -w \"INACTIVE=2\"').read()
+		if out:
+			guardaresultado("LOGINPOLICY", "TRUE")
+		else:
+			guardaresultado("LOGINPOLICY", "TRUE-1")
+	else:
+		guardaresultado("LOGINPOLICY", "FALSE")
+
+def check_nopassssh():
+	out = os.popen('cat /etc/ssh/ssh_config | grep -w \"PermitEmptyPasswords no\"').read()
+	if out:
+		guardaresultado("NOPASSSSH", "TRUE")
+	else:
+		guardaresultado("NOPASSSSH", "FALSE")
+
+def check_sshrootlogin():
+	out = os.popen('cat /etc/ssh/ssh_config | grep -w \"PermitRootLogin no\"').read()
+	if out:
+		guardaresultado("SSHROOTLOGIN", "TRUE")
+	else:
+		guardaresultado("SSHROOTLOGIN", "FALSE")
+
+def check_privilege_separation():
+	out = os.popen('cat /etc/ssh/sshd_config | grep -w \"UsePrivilegeSeparation yes\"').read()
+	if out:
+		guardaresultado("PRIVILEGESEPARATION", "TRUE")
+	else:
+		guardaresultado("PRIVILEGESEPARATION", "FALSE")
+
+def check_sshprotocol():
+	out = os.popen('cat /etc/ssh/sshd_config | grep -w \"Protocol 2\"').read()
+	if out:
+		guardaresultado("SSHPROTOCOL", "TRUE")
+	else:
+		guardaresultado("SSHPROTOCOL", "FALSE")
+
+def ssh_portforwarding():
+	out = os.popen('cat /etc/ssh/sshd_config | grep -w \"AllowTcpForwarding no\"').read()
+	if out:
+		out = os.popen('cat /etc/ssh/sshd_config | grep -w \"GatewayPorst no\"').read()
+		if out:
+			os.popen('cat /etc/ssh/sshd_config | grep -w \"X11Forwarding no\"').read()
+			if out:
+				guardaresultado("SSHPORTFORWARDING", "TRUE")
+			else:
+				guardaresultado("SSHPORTFORWARDING", "TRUE-1")
+		else:
+			guardaresultado("SSHPORTFORWARDING", "TRUE-2")
+	else:
+		guardaresultado("SSHPORTFORWARDING", "FALSE")
+
+#Ver se realmente e StrictModeS como no documento ou StricMode
+def ssh_strict_mode():
+	out = os.popen('cat /etc/ssh/sshd_config | grep -w \"StricModes yes\"').read()
+	if out:
+		guardaresultado("SSHSTRICTMODE", "TRUE")
+	else:
+		guardaresultado("SSHSTRICTMODE", "FALSE")
+
+def 
+
+
+
+
 def check_banner():
     out = os.popen('cat /etc/issue | grep \"Permitido o uso somente\"').read()
     if out:
