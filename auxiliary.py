@@ -9,6 +9,7 @@ import paramiko
 import hashlib
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+import crypto
 
 from dbmodel import User, Machine, Compliance_attr
 from prettytable import PrettyTable
@@ -33,6 +34,11 @@ class ostools(object):
 			os.system('sudo apt-get update')
 			os.system('sudo apt-get upgrade')
 			sleep(10000)
+
+	def get_hash_machine_id(macaddress):
+		machineid = hashlib.sha256(macaddress).hexdigest()
+		return machineid
+
 
 
 	def sshconnection(self, ip, port, username, password):

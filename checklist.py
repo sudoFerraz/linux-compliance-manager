@@ -3,9 +3,10 @@
 
 import os
 import platform
+import argparse
 
 #1.1 Como definir o proposito do sistema operacional sem ter contato com o usuario
-#1.2 O default de todas as instalacoes ja separa as particoes, portanto nao sei bem o que fazer sobre este item, preciso de ver se existem as particoes /boot, /var e /home somente? 
+#1.2 O default de todas as instalacoes ja separa as particoes, portanto nao sei bem o que fazer sobre este item, preciso de ver se existem as particoes /boot, /var e /home somente?  "vgdisplay"
 #1.8 Qual o runlevel adequado? Alguma maquina tera interface grafica? Quais as configuracoes padroes que devo manter?
 #1.11 Preciso checar se nenhum dos servicos descritos esta sendo executado em todas as maquinas? Parece muito geral desabilitar todos estes servicos, portanto muito provavelmente sempre dara falha na checagem
 #1.16 Preciso checar se o Laus esta instalado? / Checar se o Laus esta sendo executado na inicializacao
@@ -17,6 +18,9 @@ import platform
 #1.45 Como verificar estes mods
 #1.47 - 49  Nome dos plugins que nao acho com o yum
 
+
+parser = argparse.ArgumentParser(description='Checklist of compliance policies on linux machines.')
+parser.add_argument('--machine', help='The machine to run the checklist against', type=string, default=localhost)
 
 
 class MachineHandler(object):
@@ -388,6 +392,62 @@ def check_systatconfig():
 			guardaresultado("SYSSTATCONFIG", "TRUE-3")
 	else:
 		guardaresultado("SYSSTATCONFIG", "FALSE")
+
+def check_systempermissions():
+	out = os.popen('stat -c \"%a\" /var/spool/cron').read()
+	if out == "400":
+		out = os.popen('stat -c \"%a\" /etch/shadow').read()
+		if out == "400":
+			out = os.popen('stat -c \"%a\" /etc/crontab').read()
+			if out == "400":
+				out = os.popen('stat -c \"%a\" /etc/securetty').read()
+				if out == "600":
+					out = os.popen('stat -c \"%a\" /etc/syslog.conf').read()
+					if out == "640":
+						out = os.popen('stat -c \"%a\" /etc/rsyslog.conf').read()
+						if out == "640":
+							out = os.popen('stat -c \"%a\" /etc/sysctl.conf').read()
+							if out == "640":
+								out = os.popen('stat -c \"%a\" /var/log/wtmp').read()
+								if out == "640":
+									out = os.popen('stat -c \"%a\" /var/log/lastlog').read()
+									if out == "640":
+										out = os.popen('stat -c \"%a\" /etc/security/limits.conf').read()
+										if out == "644":
+											out = os.popen('stat -c \"%a\" /etc/csh.logn').read()
+											if out == "644":
+												out = os.popen('stat -c \"%a\" /etc/group').read()
+												if out == "644":
+													out = os.popen('stat -c \"%a\" /etc/passwd').read()
+													if out == "644":
+														guardaresultado("SYSTEMPERMISSIONS", "TRUE")
+													else:
+														guardaresultado("SYSTEMPERMISSIONS", "FALSE")
+												else:
+													guardaresultado("SYSTEMPERMISSIONS", "FALSE")
+											else:
+												guardaresultado("SYSTEMPERMISSIONS", "FALSE")
+										else:
+											guardaresultado("SYSTEMPERMISSIONS", "FALSE")
+									else:
+										guardaresultado("SYSTEMPERMISSIONS", "FALSE")
+								else:
+									guardaresultado("SYSTEMPERMISSIONS", "FALSE")
+							else:
+								guardaresultado("SYSTEMPERMISSIONS", "FALSE")
+						else:
+							guardaresultado("SYSTEMPERMISSIONS", "FALSE")
+					else:
+						guardaresultado("SYSTEMPERMISSIONS", "FALSE")
+				else:
+					guardaresultado("SYSTEMPERMISSIONS", "FALSE")
+			else:
+				guardaresultado("SYSTEMPERMISSIONS", "FALSE")
+		else:
+			guardaresultado("SYSTEMPERMISSIONS", "FALSE")
+	else:
+		guardaresultado("SYSTEMPERMISSIONS", "FALSE")
+
 
 
 def check_blankpass_ssh():
