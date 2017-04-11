@@ -15,6 +15,7 @@ import platform
 #1.26 Como descobrir quais são os funcionarios
 #1.28 OK
 #1.45 Como verificar estes mods
+#1.47 - 49  Nome dos plugins que nao acho com o yum
 
 
 
