@@ -471,7 +471,12 @@ def check_userwithblankpass():
 	else:
 		guardaresultado("USERBLANKPASS", "FALSE")
 
-
+def check_runlevel():
+	out = os.popen('systemctl get-default').read()
+	if out == "multi-user.target":
+		guardaresultado("RUNLEVEL", "TRUE")
+	else:
+		guardaresultado("RUNLEVE", "FALSE")
 
 
 
