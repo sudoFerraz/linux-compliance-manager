@@ -9,7 +9,6 @@ import paramiko
 import hashlib
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import crypto
 
 from dbmodel import User, Machine, Compliance_attr
 from prettytable import PrettyTable
@@ -72,13 +71,32 @@ class user_handlers(object):
 		self.user = ""
 		self.logged = False
 
+	def login(self):
+		print "Digite usuario (algartelecom)"
+		usertry = raw_input()
+		print "Digite senha"
+		passtry = raw_input()
+		founduser = session.query(User).filter_by(user=usertry).first()
+		if not founduser:
+			return ""
+		if founduser.password == passtry:
+			print "Login efetuado com sucesso"
+			self.user = founduser
+			self.logged = True
+			return founduser.user
+		else:
+			print "Login nao efetuado, tente novamente"
+			return ""
+
 
 	def cria_user(self, session):
-		print "Digite nome de usuario (algartelecom)"
+		print "Digite nome de usuario (@algartelecom.com.br)"
 		usernew = raw_input()
 		print "Digite senha forte"
 		passnew = raw_input()
-		newuser = dbmodel.User(user=usernew, password=passnew)
+		print "Digite seu nome"
+		nomenew = raw_input()
+		newuser = dbmodel.User(user=usernew, password=passnew, name=nomenew)
 		session.add(newuser)
 		session.commit()
 		session.flush()
@@ -153,14 +171,14 @@ class machine_handler(object):
 		self.ip = ""
 
 	def delete(self, session, machineid):
-		foundmachine = session.query(Machines).\
+		foundmachine = session.query(Machine).\
 		filter_by(idmachine=machineid).delete()
 		session.commit()
 		session.flush
 
 
 	def get_machine_by_id(self, machineid, session):
-		foundmachine = session.query(Machines).filter_by(idmachine=machineid).first()
+		foundmachine = session.query(Machine).filter_by(idmachine=machineid).first()
 		if not foundmachine:
 			print "Maquina nao encontrada, tente novamente"
 			return False
@@ -172,7 +190,7 @@ class machine_handler(object):
 			return False
 
 	def get_machine_by_name(self, machinename, session):
-		foundmachine = session.query(Machines).filter_by(nome=machinename).first()
+		foundmachine = session.query(Machine).filter_by(nome=machinename).first()
 		if not foundmachine:
 			print "Maquina nao encontrada, tente novamente"
 			return False
@@ -183,11 +201,11 @@ class machine_handler(object):
 			print "Maquina nao encontrada, tente novamente"
 			return False
 
-	def get_all_machines(self, session):
+	def get_all_machines(self):
 		"""Retornando em forma de print, nao retorna nenhum objeto"""
 		j = PrettyTable(['MachineID', 'Ip', 'Nome', 'Full Compliance',\
 		 'Data verificacao'])
-		for machine in session.query(Machines).order_by(Machines.scanned):
+		for machine in session.query(Machine).order_by(Machine.scanned):
 			j.add_row([machine.machineid, machine.ip, machine.nome, \
 			machine.compliance, machine.scanned])
 		print j

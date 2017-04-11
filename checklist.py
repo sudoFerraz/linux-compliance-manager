@@ -7,7 +7,7 @@ import argparse
 
 #1.1 Como definir o proposito do sistema operacional sem ter contato com o usuario
 #1.2 O default de todas as instalacoes ja separa as particoes, portanto nao sei bem o que fazer sobre este item, preciso de ver se existem as particoes /boot, /var e /home somente?  "vgdisplay"
-#1.8 Qual o runlevel adequado? Alguma maquina tera interface grafica? Quais as configuracoes padroes que devo manter?
+#1.8  OK
 #1.11 Preciso checar se nenhum dos servicos descritos esta sendo executado em todas as maquinas? Parece muito geral desabilitar todos estes servicos, portanto muito provavelmente sempre dara falha na checagem
 #1.16 Preciso checar se o Laus esta instalado? / Checar se o Laus esta sendo executado na inicializacao
 #1.20 Como saber o nome dos usuarios que serao enjaulados para poder checar se as configuracoes estao validas
@@ -15,7 +15,7 @@ import argparse
 #1.25 OK
 #1.26 Como descobrir quais são os funcionarios
 #1.28 OK
-#1.45 Como verificar estes mods
+#1.45 OK
 #1.47 - 49  Nome dos plugins que nao acho com o yum
 
 
