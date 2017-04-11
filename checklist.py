@@ -4,6 +4,26 @@
 import os
 import platform
 
+#1.1 Como definir o proposito do sistema operacional sem ter contato com o usuario
+#1.2 O default de todas as instalacoes ja separa as particoes, portanto nao sei bem o que fazer sobre este item, preciso de ver se existem as particoes /boot, /var e /home somente? 
+#1.8 Qual o runlevel adequado? Alguma maquina tera interface grafica? Quais as configuracoes padroes que devo manter?
+#1.11 Preciso checar se nenhum dos servicos descritos esta sendo executado em todas as maquinas? Parece muito geral desabilitar todos estes servicos, portanto muito provavelmente sempre dara falha na checagem
+#1.16 Preciso checar se o Laus esta instalado? / Checar se o Laus esta sendo executado na inicializacao
+#1.20 Como saber o nome dos usuarios que serao enjaulados para poder checar se as configuracoes estao validas
+#1.23 OK
+#1.25 OK
+#1.26 Como descobrir quais são os funcionarios
+#1.28 OK
+#1.45 Como verificar estes mods
+
+
+
+class MachineHandler(object):
+	def __init__(self):
+		self.machineid = get_machine_mac()
+		self.machineid = auxiliary.ostools.get_hash_machine_id(machineid)
+		self.dbconnection = auxiliary.dbconnection()
+
 def timezone_check():
     out = os.popen('timedatectl | grep \'Time\( zone\|zone\)\'').read()
     guardaresultado("timezone", out)
@@ -14,6 +34,14 @@ def guardaresultado(op, res):
     f.write(op + "\n")
     f.write(res + "\n\n")
     f.close()
+
+def guardaresultado_db(op, res):
+	session = auxiliary.dbconnection(1, 1, 1, 1)
+
+def get_machine_mac():
+	out = os.popen('ifconfig | grep \"ether\"').read()
+	return out
+
 
 
 def update_check():
@@ -47,6 +75,10 @@ def gatherinfo():
     out = str(out)
     guardaresultado("SO", out)
 
+
+def check_syslog():
+	out = os.popen('')
+
 def check_selinux():
     out = os.popen('cat /etc/selinux/config').read()
     string = "SELINUX=enforcing"
@@ -60,6 +92,56 @@ def config_selinux():
     if out == "":
         out = "OK"
     guardaresultado("selinux", out)
+
+
+def check_syslogseverity():
+	out = os.popen('cat /etc/syslog.conf | grep -w \"#kern.*                                                 /dev/console\"').read()
+	if out:
+		out = os.popen('cat /etc/syslog.conf | grep -w \"*.info;mail.none;authpriv.none;cron.none                /var/log/messages\"').read()
+		if out:
+			out = os.popen('cat /etc/syslog.conf | grep -w \"authpriv.*                                              /var/log/secure\"').read()
+			if out:
+				out = os.popen('cat /etc/syslog.conf | grep -w \"mail.*                                                  -/var/log/maillog\"').read()
+				if out:
+					out = os.popen('cat /etc/syslog.conf | grep -w \"cron.*                                                  /var/log/cron\"').read()
+					if out:
+						out = os.popen('cat /etc/syslog.conf | grep -w \"*.emerg                                                 *\"').read()
+						if out:
+							out = os.popen('cat /etc/syslog.conf | grep -w \"uucp,news.crit                                          /var/log/spooler\"').read()
+							if out:
+								out = os.popen('cat /etc/syslog.cof | grep -w \"local7.*                                                /var/log/boot.log\"').read()
+								guardaresultado('SYSLOGSEVERITY', "TRUE")
+	else:
+		guardaresultado("SYSLOGSEVERITY", "FALSE")
+
+
+def check_last():
+	out = os.popen('last').read()
+	if out:
+		out = os.popen('lastb').read()
+		if out:
+			out = os.popen('lastlog').read()
+			if out:
+				guardaresultado("LAST", "TRUE")
+			else:
+				guardaresultado("LAST", "TRUE-1")
+		else:
+			guardaresultado("LAST", "TRUE-2")
+	else:
+		guardaresultado("LAST", "FALSE")
+
+def check_psacct():
+	out = os.popen('rpm -qa | egrep \"psacct\"').read()
+	if out:
+		out = os.popen('systemctl list-unit-files | grep \"psacct\"').read()
+		if out:
+			guardaresultado("PSACCT", "TRUE")
+		else:
+			guardaresultado("PSACCT", "TRUE-1")
+	else:
+		guardaresultado("PSACCT", "FALSE")
+
+
 
 def check_empty_output(out):
     if out == "":
