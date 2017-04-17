@@ -177,12 +177,12 @@ class machine_handler(object):
 		session.flush
 
 
-	def get_machine_by_id(self, machineid, session):
-		foundmachine = session.query(Machine).filter_by(idmachine=machineid).first()
+	def get_machine_by_id(self, idmachine, session):
+		foundmachine = session.query(Machine).filter_by(machineid=idmachine).first()
 		if not foundmachine:
 			print "Maquina nao encontrada, tente novamente"
 			return False
-		if foundmachine.idmachine == machineid:
+		if foundmachine.machineid == idmachine:
 			#print prettytable
 			return foundmachine
 		else:
@@ -276,7 +276,7 @@ class machine_handler(object):
 
 class compliance_handlers(object):
 	"""Classe para ajudar no manuseamento da tabela COMPLIANCE_ATTR"""
-	def __init__():
+	def __init__(self):
 		self.machineid = ""
 
 	def get_print(self, session, idmachine):

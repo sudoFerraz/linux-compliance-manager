@@ -13,14 +13,14 @@ import argparse
 #1.20 Como saber o nome dos usuarios que serao enjaulados para poder checar se as configuracoes estao validas
 #1.23 OK
 #1.25 OK
-#1.26 Como descobrir quais são os funcionarios
+#1.26 Como descobrir quais sao os funcionarios
 #1.28 OK
 #1.45 OK
 #1.47 - 49  Nome dos plugins que nao acho com o yum
 
 
 parser = argparse.ArgumentParser(description='Checklist of compliance policies on linux machines.')
-parser.add_argument('--machine', help='The machine to run the checklist against', type=string, default=localhost)
+parser.add_argument('--machine', help='The machine to run the checklist against', type=int, default='localhost')
 
 
 class MachineHandler(object):
