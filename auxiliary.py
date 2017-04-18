@@ -201,14 +201,15 @@ class machine_handler(object):
 			print "Maquina nao encontrada, tente novamente"
 			return False
 
-	def get_all_machines(self):
+	def get_all_machines(self,session):
 		"""Retornando em forma de print, nao retorna nenhum objeto"""
 		j = PrettyTable(['MachineID', 'Ip', 'Nome', 'Full Compliance',\
 		 'Data verificacao'])
-		for machine in session.query(Machine).order_by(Machine.scanned):
+		foundmachines = session.query(Machine).order_by(Machine.scanned)
+		for machine in foundmachines:
 			j.add_row([machine.machineid, machine.ip, machine.nome, \
 			machine.compliance, machine.scanned])
-		print j
+		return foundmachines
 
 	def handle_cria_maquina(self, session, idmaquina, nomemachine, \
 							scantime, compliancenew, ipmachine):
@@ -256,20 +257,20 @@ class machine_handler(object):
 		return foundmachine
 
 	def get_all_safe(self, session, idmaquina):
-		"""Retornando a pretty table"""
+		"""Retornando a pretty table e depois a lista"""
 		t = PrettyTable(['Id maquina', 'IP maquina'])
 		foundmachines = session.query(Machine).filter_by(compliance=True)
 		for foundmachine in foundmachines:
 			t.add_row([foundmachine.machineid, foundmachine.ip])
-		return t
+		return t, foundmachines
 
 	def get_all_false(self, session, idmaquina):
-		"""Retornando a pretty table"""
+		"""Retornando a pretty table e depois a lista"""
 		t = PrettyTable(['ID maquina', 'Ip maquina'])
 		foundmachines = session.query(Machine).filter_by(compliance=False)
 		for foundmachine in foundmachines:
 			t.add_row([foundmachine.machineid, foundmachine.ip])
-		return t
+		return t, foundmachines
 
 
 

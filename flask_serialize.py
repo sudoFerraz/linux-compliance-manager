@@ -20,3 +20,7 @@ def return_machine_serialized(machineid):
 		return foundmachine
 	else:
 		return False
+
+def return_allmachines():
+	foundmachines = machinehandler.get_all_machines(session)
+	return foundmachines
