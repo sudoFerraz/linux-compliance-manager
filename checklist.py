@@ -114,7 +114,7 @@ def check_syslogseverity():
 						if out:
 							out = os.popen('cat /etc/syslog.conf | grep -w \"uucp,news.crit                                          /var/log/spooler\"').read()
 							if out:
-								out = os.popen('cat /etc/syslog.cof | grep -w \"local7.*                                                /var/log/boot.log\"').read()
+								out = os.popen('cat /etc/syslog.conf | grep -w \"local7.*                                                /var/log/boot.log\"').read()
 								guardaresultado('SYSLOGSEVERITY', "TRUE")
 	else:
 		guardaresultado("SYSLOGSEVERITY", "FALSE")

@@ -114,7 +114,7 @@ class user_handlers(object):
 
 	def handler_update_user_type(self, session, userid, newtype):
 		"""Fazer a verificacao de permissoes previamente"""
-		founduser = session.query(User).filter_by(machineid=idmaquina).first()
+		founduser = session.query(User).filter_by(id=userid).first()
 		if not founduser:
 			return False
 		founuser.usertype = newtype
@@ -172,17 +172,17 @@ class machine_handler(object):
 
 	def delete(self, session, machineid):
 		foundmachine = session.query(Machine).\
-		filter_by(idmachine=machineid).delete()
+		filter_by(id=machineid).delete()
 		session.commit()
 		session.flush
 
 
 	def get_machine_by_id(self, idmachine, session):
-		foundmachine = session.query(Machine).filter_by(machineid=idmachine).first()
+		foundmachine = session.query(Machine).filter_by(id=idmachine).first()
 		if not foundmachine:
 			print "Maquina nao encontrada, tente novamente"
 			return False
-		if foundmachine.machineid == idmachine:
+		if foundmachine.id == idmachine:
 			#print prettytable
 			return foundmachine
 		else:
@@ -207,13 +207,13 @@ class machine_handler(object):
 		 'Data verificacao'])
 		foundmachines = session.query(Machine).order_by(Machine.scanned)
 		for machine in foundmachines:
-			j.add_row([machine.machineid, machine.ip, machine.nome, \
+			j.add_row([machine.id, machine.ip, machine.nome, \
 			machine.compliance, machine.scanned])
 		return foundmachines
 
 	def handle_cria_maquina(self, session, idmaquina, nomemachine, \
 							scantime, compliancenew, ipmachine):
-		newmachine = dbmodel.Machine(machineid=idmaquina, nome=nomemachine\
+		newmachine = dbmodel.Machine(id=idmaquina, nome=nomemachine\
 		, ip=ipmachine, scanned=scantime, compliance=compliancenew)
 		session.add(newmachine)
 		session.commit()
@@ -221,34 +221,34 @@ class machine_handler(object):
 		return newmachine
 
 	def handle_update_machine_name(self, session, idmaquina, newnome):
-		foundmachine = session.query(Machine).filter_by(machineid=idmaquina).first()
+		foundmachine = session.query(Machine).filter_by(id=idmaquina).first()
 		foundmachine.nome = newnome
 		session.commit()
 		session.flush()
 
 	def handle_update_machine_scan(self, session, idmaquina, newdate):
 		"""Edita o horario para um novo"""
-		foundmachine = session.query(Machine).filter_by(machineid=idmaquina).first()
+		foundmachine = session.query(Machine).filter_by(id=idmaquina).first()
 		foundmachine.scanned = newdate
 		session.commit()
 		session.flush()
 
 	def set_machine_scan_now(self, session, idmaquina):
 		"""Coloca o horario atual no scanned"""
-		foundmachine = session.query(Machine).filter_by(machineid=idmaquina).first()
+		foundmachine = session.query(Machine).filter_by(id=idmaquina).first()
 		foundmachine.scanned = datetime.datetime
 		session.commit()
 		session.flush()
 
 	def handler_update_machine_compliance(self, session, idmaquina, boolean):
-		foundmachine = session.query(Machine).filter_by(machineid=idmaquina).first()
+		foundmachine = session.query(Machine).filter_by(id=idmaquina).first()
 		if not foundmachine:
 			return False
 		foundmachine.compliance = boolean
 		return foundmachine
 
 	def handler_update_machine_ip(self, session, idmaquina, ipnovo):
-		foundmachine = session.query(Machine).filter_by(machineid=idmaquina).first()
+		foundmachine = session.query(Machine).filter_by(id=idmaquina).first()
 		if not foundmachine:
 			return False
 		foundmachine.ip = ipnovo
@@ -261,7 +261,7 @@ class machine_handler(object):
 		t = PrettyTable(['Id maquina', 'IP maquina'])
 		foundmachines = session.query(Machine).filter_by(compliance=True)
 		for foundmachine in foundmachines:
-			t.add_row([foundmachine.machineid, foundmachine.ip])
+			t.add_row([foundmachine.id, foundmachine.ip])
 		return t, foundmachines
 
 	def get_all_false(self, session, idmaquina):
@@ -269,7 +269,7 @@ class machine_handler(object):
 		t = PrettyTable(['ID maquina', 'Ip maquina'])
 		foundmachines = session.query(Machine).filter_by(compliance=False)
 		for foundmachine in foundmachines:
-			t.add_row([foundmachine.machineid, foundmachine.ip])
+			t.add_row([foundmachine.id, foundmachine.ip])
 		return t, foundmachines
 
 
@@ -283,7 +283,7 @@ class compliance_handlers(object):
 	def get_print(self, session, idmachine):
 		"""Retornando print"""
 		foundmachine = session.query(Compliance_attr)\
-		.filter_by(machineid=idmachine).first()
+		.filter_by(id=idmachine).first()
 		machinedict = dict((col, getattr(foundmachine, col))\
 			for col in foundmachine.__table__.columns.keys())
 		for key, value in custome_dict.iteritems():
@@ -294,27 +294,27 @@ class compliance_handlers(object):
 
 	def delete(self, session, idmachine):
 		foundcompliance = session.query(Compliance_attr).\
-		filter_by(machineid=idmachine).delete()
+		filter_by(id=idmachine).delete()
 		session.commit()
 		session.flush()
 
 	def get(self, session, idmachine):
 		"""Retornando tabela full"""
 		foundcompliance = session.query(Compliance_attr)\
-		.filter_by(machineid=idmachine).first()
+		.filter_by(id=idmachine).first()
 		if not foundmachine:
 			return False
-		if foundmachine.machineid == idmachine:
+		if foundmachine.id == idmachine:
 			return foundcompliance
 		else:
 			return False
 
 	def update_attr(self, session, idmachine, attr):
 		foundmachine = session.query(Compliance_attr)\
-		.filter_by(machineid=idmachine).first()
+		.filter_by(id=idmachine).first()
 		if not foundmachine:
 			return False
-		if foundmachine.machineid == idmachine:
+		if foundmachine.id == idmachine:
 			inst = inspect(Compliance_attr)
 			attr_names = [c_attr.key for c_attr in inst.mapper.columns_attrs]
 			if attr in attr_names:
@@ -333,7 +333,7 @@ class compliance_handlers(object):
 
 	def cria(self, session, idmaquina):
 		print "Criando compliance da maquina " + idmaquina
-		newcompliance = dbmodel.Compliance_attr(machineid=idmaquina)
+		newcompliance = dbmodel.Compliance_attr(id=idmaquina)
 		session.add(newcompliance)
 		session.commit()
 		session.flush()
@@ -341,7 +341,7 @@ class compliance_handlers(object):
 
 	def update_obs(self, session, idmaquina, newobs):
 		compliancefound = session.query(Compliance_attr).\
-		filter_by(machineid=idmaquina).first()
+		filter_by(id=idmaquina).first()
 		if not compliancefound:
 			return False
 		compliancefound.observacoes = newobs
@@ -359,6 +359,7 @@ def handle_checklist(session, idmaquina):
 	t.add_row(['1', 'Executar arrumacasa.sh nesta máquina remotamente agora'])
 	t.add_row(['2', 'Escanear a maquina e fazer um checklist dos conformes'])
 	t.add_row(['3', ''])
+
 
 
 

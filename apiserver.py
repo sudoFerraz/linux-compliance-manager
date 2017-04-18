@@ -5,7 +5,58 @@ import flask_serialize
 from flask import jsonify
 from flask import request
 import json
+import dbmodel
+from flask_sqlalchemy import SQLAlchemy
+from flask_admin.contrib.sqla import ModelView
+from flask_admin import Admin
+from dbmodel import User
+from dbmodel import Machine
+from dbmodel import Compliance_attr
+from flask_wtf import FlaskForm
+from flask_bootstrap import Bootstrap
+from wtforms import StringField, PasswordField, BooleanField
+from wtforms.validators import InputRequired, Email, Length
+
+
+
+
+
+class LoginForm(FlaskForm):
+	username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
+	password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
+	remember = BooleanField('remember me')
+
 app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost/postgres'
+app.config['SECRET_KEY'] = 'postgres'
+
+db = SQLAlchemy(app)
+
+admin = Admin(app)
+
+ferramenta = auxiliary.ostools()
+session = ferramenta.dbconnection(11, 1, 1, 1)
+
+class MyModelView(ModelView):
+    def __init__(self, model, session, name=None, category=None, endpoint=None, url=None, **kwargs):
+        for k, v in kwargs.iteritems():
+            setattr(self, k, v)
+
+        super(MyModelView, self).__init__(model, session, name=name, category=category, endpoint=endpoint, url=url)
+
+    def is_accessible(self):
+        # Logic
+        return True
+
+class ComplianceView(ModelView):
+	column_display_pk = True
+	column_hide_backrefs = False
+	column_list = ('machineid', 'observacoes', 'proposito', 'particionamento')
+
+admin.add_view(MyModelView(User, session,editable_columns=['user', 'name', 'password', 'usertype'], list_columns=['user', 'name', 'password', 'usertype']))
+admin.add_view(ModelView(Machine, session))
+admin.add_view(ModelView(Compliance_attr, session))
 
 
 #GET REQUEST
@@ -29,12 +80,14 @@ def getallmachines():
 		for machine in foundmachines:
 			jsonlist.append(jsonify(machineid=machine.machineid, ip=machine.ip, nome=machine.nome, compliance=machine.compliance, scanned=machine.scanned))
 		print jsonlist
-		jsonlist = jsonify(machines=jsonlist)
+		jsonlist = jsonify(jsonlist)
 		return jsonlist
 		#for machinejson in jsonlist:
 		#	jsonanswer
 
-		
+@app.route('/')
+def getroot():
+	return "Hello" 
 
 
 #POST REQUEST

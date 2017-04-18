@@ -2,10 +2,10 @@
 
 import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Boolean, Date, DATETIME
+from sqlalchemy import Column, Integer, String, Boolean, Date, DateTime
 from sqlalchemy import ForeignKey
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.sql import func
 
 Base = declarative_base()
@@ -13,7 +13,8 @@ Base = declarative_base()
 class User(Base):
 
     __tablename__ = 'Users'
-    user = Column(String, primary_key=True)
+    id = Column(Integer, primary_key=True)
+    user = Column(String)
     name = Column(String)
     password = Column(String)
     usertype = Column(String)
@@ -24,18 +25,24 @@ class User(Base):
 
 class Machine(Base):
 
-    __tablename__ = 'Machines'
-    machineid = Column(String, primary_key=True)
+    __tablename__ = 'Machine'
+    id = Column(Integer, primary_key=True)
 
     ip = Column(String)
     nome = Column(String)
     compliance = Column(Boolean)
-    scanned = Column(DATETIME, server_default=func.now())
+    scanned = Column(DateTime, server_default=func.now())
+    to_scan = Column(Boolean)
+    to_apply = Column(Boolean)
+
+    def __repr__(self):
+        return "Machine Nome : %s, Ip : %s " %(self.nome, self.ip)
 
 class Compliance_attr(Base):
 
     __tablename__ = "Compliance_attr"
-    machineid = Column(String, ForeignKey('Machines.machineid'),primary_key=True)
+    machineid = Column(Integer, ForeignKey('Machine.id'),primary_key=True)
+    machine = relationship("Machine")
     observacoes = Column(String)
     proposito = Column(String)
     particionamento = Column(Boolean, default=False)
