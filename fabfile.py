@@ -325,15 +325,67 @@ def checklist():
             listofitens.append("systempermissions")
     else:
         listofitens.append("systempermissions")
-
-
-
-
-    output = run('')
-    output = run('')
-    output = run('')
-    output = run('')
-    output = run('')
+    output = run('cat /etc/ssh/sshd_config | grep -w \"PermitEmpyPasswords no\"')
+    if output:
+        pass
+    else:
+        listofitens.append("blankpass_ssh")
+    output = run('getent passwd | awk -F: \'$3 == \"0\" { print $1 }\' ')
+    if output == "root":
+        pass
+    else:
+        listofitens.append("rootuid")
+    output = run('cat /etc/shadow | awk -F: \'$2 == \"!!\" { print $1 }\'')
+    if output:
+        pass
+    else:
+        listofitens.append("userblankpass")
+    output = run('systemctl get-default')
+    if output == "multi-user.target":
+        pass
+    else:
+        listofitens.append("runlevel")
+    output = run('cat /etc/issue | grep \"Permitido o uso somente')
+    if output:
+        output = run('cat /etc/issue.net | grep \"Permitido o uso somente\"')
+        if output:
+            output = run('cat /etc/motd | grep \"Permitido o uso somente\"')
+            if output:
+                pass
+            else:
+                listofitens.append("banner")
+        else:
+            listofitens.append("banner")
+    else:
+        listofitens.append("banner")
+    output = run('cat /etc/mail/sendmail.mc')
+    if "DAEMON_OPTIONS('Port=smtp,Addr=127.0.0.1, Name=MTA')dnl" in output:
+        output = run('cat /etc/mail/sendmail.cf')
+        if output:
+            pass
+        else:
+            listofitens.append("mailserver")
+    else:
+        listofitens.append("mailserver")
+    output = run('yum list installed sysstat')
+    if output == True:
+        pass
+    else:
+        listofitens.append("check_sysstat")
+    output = run('cat /etc/pam.d/su')
+    if "auth required pam wheel.so use uid" in output:
+        pass
+    else:
+        listofitens.append("suwheel")
+    output = run('cat /etc/sysctl.d/100-backlog.conf | grep \"Check List\"')
+    if output:
+        output = run('cat /etc/sysctl.conf | grep \"Check List\"')
+        if output:
+            pass
+        else:
+            listofitens.append("kernel_network")
+    else:
+        listofitens.append("kernel_network")
 
 
 
