@@ -1,19 +1,20 @@
 import auxiliary
 import os
-from fabric.api import *
-
+import datetime
+from time import sleep
 
 machinehandler = auxiliary.machine_handler()
 userhandler = auxiliary.user_handlers()
 ferramenta = auxiliary.ostools()
 compliancehandler = auxiliary.compliance_handlers()
 
+user = "centos"
+password = "animal"
 
 session = ferramenta.dbconnection(11, 11, 11, 11)
 
 def fabric_checklist_scan(session, ip):
-	with settings(host_string="10.51.202.72", user = "centos"):
-		output = run('uname -a')
+	out = os.popen('sudo fab -H'+user+'@'+ip+' -p '+password+' checklist:\''+ip+'\'').read()
 def fabric_checklist_apply(session, ip):
 	pass
 
@@ -23,12 +24,11 @@ while True:
 		if machine.compliance == True:
 			pass
 		elif machine.to_scan == True:
-			fabric_checklist_host(session, machine.ip)
+			fabric_checklist_scan(session, machine.ip)
+			machine.scanned = datetime.datetime.now()
 		elif machine.to_apply == True:
 			fabric_checklist_apply(session, machine.ip)
 	sleep(100)
 
 
-if __name__ == '__main__':
-	fabric_checklist_scan(2, 2)
 

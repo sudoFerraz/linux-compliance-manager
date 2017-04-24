@@ -214,7 +214,7 @@ def crontab_check():
     if string in out:
         guardaresultado("CRONTAB", "TRUE")
     else:
-        guardaresultado("CRONTAB", "TRUE")
+        guardaresultado("CRONTAB", "FALSE")
 
 def check_crtlaltdel():
     out = os.popen('cat /etc/inittab | grep \"#ca:12345:ctrlaltdel\"').read()
