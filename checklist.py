@@ -12,15 +12,11 @@ import argparse
 #1.16 Preciso checar se o Laus esta instalado? / Checar se o Laus esta sendo executado na inicializacao
 #1.20 Como saber o nome dos usuarios que serao enjaulados para poder checar se as configuracoes estao validas
 #1.23 OK
-#1.25 OK
+#1.25 OK   
 #1.26 Como descobrir quais sao os funcionarios
 #1.28 OK
 #1.45 OK
 #1.47 - 49  Nome dos plugins que nao acho com o yum
-
-
-parser = argparse.ArgumentParser(description='Checklist of compliance policies on linux machines.')
-parser.add_argument('--machine', help='The machine to run the checklist against', type=int, default='localhost')
 
 
 class MachineHandler(object):
@@ -32,13 +28,16 @@ class MachineHandler(object):
 def timezone_check():
     out = os.popen('timedatectl | grep \'Time\( zone\|zone\)\'').read()
     guardaresultado("timezone", out)
+    #comparar com o timezone certo
 
 
 def guardaresultado(op, res):
-    f = open("resultado.txt", "a")
+    f = open("resultado23.txt", "a")
     f.write(op + "\n")
     f.write(res + "\n\n")
+    print("OKOKOKOKOKOK")
     f.close()
+    return op, res
 
 def guardaresultado_db(op, res):
 	session = auxiliary.dbconnection(1, 1, 1, 1)
@@ -197,7 +196,8 @@ def check_ipv6():
         else:
             guardaresultado("IPV6", "TRUE-1")
     else:
-        guardaresultado("IPV6", "FALSE")
+    	out = os.popen('uname -a').read()
+        guardaresultado("IPV6", str(out))
 
 def disable_ipv6():
     out = os.popen('sysctl -w net.ipv6.conf.default.disable_ipv6=1').read()
@@ -553,6 +553,8 @@ def crontab_config():
     out = check_empty_output(out)
     guardaresultado("CRONTAB", out)
 
+check_datetime_bash()
+"""
 check_ipv6()
 check_kernel_network()
 check_suwheel()
@@ -589,3 +591,4 @@ check_rememberpass_redhat58()
 check_ssh_bannerconf()
 check_ssh_portforwarding()
 check_ssh_strict_mode()
+"""
