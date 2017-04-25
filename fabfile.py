@@ -3,7 +3,7 @@ import os
 import platform
 import argparse
 import auxiliary
-
+from dbmodel import Machine, Compliance_attr
 
 listofitens = []
 ferramenta = auxiliary.ostools()
@@ -52,14 +52,14 @@ def checklist(ipmaquina):
             if "All up to date" in output:
                 pass
             else:
-                listofitens.append("update_check")
+                listofitens.append("updated")
         else:
-            listofitens.append("update_check")
+            listofitens.append("updated")
         output = run('cat /etc/selinux/config')
         if "SELINUX=enforcing" in output:
             pass
         else:
-            listofitens.append("SELINUX")
+            listofitens.append("selinux")
         out = run('cat /etc/syslog.conf | egrep -w \"#kern.*                                                 /dev/console\"')
         if out:
             if out:
@@ -79,23 +79,23 @@ def checklist(ipmaquina):
                                         if output:
                                             pass
                                         else:
-                                            listofitens.append("syslogseverity")
+                                            listofitens.append("syslog")
                                     else:
-                                        listofitens.append("syslogseverity")
+                                        listofitens.append("syslog")
                                 else:
-                                    listofitens.append("syslogseverity")
+                                    listofitens.append("syslog")
                             else:
-                                listofitens.append("syslogseverity")
+                                listofitens.append("syslog")
                         else:
-                            listofitens.append("syslogseverity")
+                            listofitens.append("syslog")
                     else:
-                        listofitens.append("syslogseverity")
+                        listofitens.append("syslog")
                 else:
-                    listofitens.append("syslogseverity")
+                    listofitens.append("syslog")
             else:
-                listofitens.append("syslogseverity")
+                listofitens.append("syslog")
         else:
-            listofitens.append("syslogseverity")
+            listofitens.append("syslog")
         output = run('last')
         if output:
             output = run('lastb')
@@ -104,11 +104,11 @@ def checklist(ipmaquina):
                 if output:
                     pass
                 else:
-                    listofitens.append("check_last")
+                    listofitens.append("last_lastb_lastlog")
             else:
-                listofitens.append("check_last")
+                listofitens.append("last_lastb_lastlog")
         else:
-            listofitens.append("check_last")
+            listofitens.append("last_lastb_lastlog")
         output = run('rpm -qa | egrep \"psacct\"')
         if output:
             output = run('systemctl list-unit-files | egrep \"psacct\"')
@@ -130,33 +130,33 @@ def checklist(ipmaquina):
                         if output == "":
                             pass
                         else:
-                            listofitens.append("grub_config")
+                            listofitens.append("senhagrub")
                     else:
-                        listofitens.append("grub_config")
+                        listofitens.append("senhagrub")
                 else:
-                    listofitens.append("grub_config")
+                    listofitens.append("senhagrub")
             else:
-                listofitens.append("grub_config")
+                listofitens.append("senhagrub")
         else:
-            listofitens.append("grub_config")
+            listofitens.append("senhagrub")
         output = run('cat /etc/sysctl.conf | grep \"ipv6\"')
         if "net.ipv6.conf.all.disable_ipv6=1" in output:
             if "net.ipv6.conf.default.disable_ipv6=1" in output:
                 pass
             else:
-                listofitens.append("check_ipv6")
+                listofitens.append("ipv6")
         else:
-            listofitens.append("check_ipv6")
+            listofitens.append("ipv6")
         output = run('cat /var/spool/cron/root')
         if "######### Check List de Seguranca #################\n0,15,30,45 * * * * /usr/sbin/ntpdate -u 10.32.9.230\n0,15,30,45 * * * * /sbin/hwclock --systohc\n###################################################" in output:
             pass
         else:
-            listofitens.append("crontab_check")
+            listofitens.append("ntp")
         output = run('cat /etc/inittab | grep \"#ca:12345:ctrlaltdel\"')
         if output:
             pass
         else:
-            listofitens.append("ctrlaltdel")
+            listofitens.append("ctrl_alt_del")
         output = run('rpm -qa | egrep \"^gcc|java|bin86|dev86|cc|flex|bison|nasm\"')
         if output:
             listofitens.append("compiladores")
@@ -599,6 +599,10 @@ def checklist(ipmaquina):
                 foundcompliance.sysstat_config = False
             elif "sysstat_config" not in listofitens:
                 foundcompliance.sysstat_config = True
+        if len(listofitens) == 0:
+            foundmachine.compliance == True
+        session.commit()
+        session.flush()
 
 
 

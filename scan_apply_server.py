@@ -30,7 +30,7 @@ while True:
 			session.flush()
 		elif machine.to_apply == True:
 			fabric_checklist_apply(session, machine.ip)
-	sleep(100)
+	sleep(10)
 
 
 
