@@ -2,9 +2,16 @@ from fabric.api import task, run, local, put, settings, abort
 import os
 import platform
 import argparse
+import auxiliary
 
 
 listofitens = []
+ferramenta = auxiliary.ostools()
+machinehandler = auxiliary.machine_handler()
+compliancehandler = auxiliary.compliance_handlers()
+session = ferramenta.dbconnection(11, 11, 11, 11)
+
+
 
 @task()
 def update_all(reboot_host='false'):
@@ -30,7 +37,7 @@ def hello():
         print output
 
 @task()
-def checklist(ip):
+def checklist(ipmaquina):
     with settings(warn_only=True):
         output = run('timedatectl | egrep \'Time( zone|zone)\'')
     #PEGAR QUAL O TIMEZONE CERTO PARA AS MAQUINAS
@@ -393,6 +400,206 @@ def checklist(ip):
             listofitens.append("kernel_network")
         #FAZER O UPDATE NA TABELA
         print listofitens
+        foundmachine = session.query(Machine).filter_by(ip=ipmaquina).first()
+        foundcompliance = session.query(Compliance_attr).filter_by(machineid=foundmachine.id).first()
+        for item in listofitens:
+            if item == "particionamento":
+                foundcompliance.particionamento = False
+            elif "particionamento" not in listofitens:
+                foundcompliance.particionamento = True
+            if item == "timezone":
+                foundcompliance.timezone = False
+            elif "timezone" not in listofitens:
+                foundcompliance.timezone = True
+            if item == "selinux":
+                foundcompliance.selinux = False
+            elif "selinux" not in listofitens:
+                foundcompliance.selinux = True
+            if item == "senhagrub":
+                foundcompliance.senhagrub = False
+            elif "senhagrub" not in listofitens:
+                foundcompliance.senhagrub = True
+            if item == "updated":
+                foundcompliance.senhagrub = False
+            elif "updated" not in listofitens:
+                foundcompliance.updated = True
+            if item == "ipv6":
+                foundcompliance.ipv6 = False
+            elif "ipv6" not in listofitens:
+                foundcompliance.ipv6 = True
+            if item == "runlevel":
+                foundcompliance.runlevel = False
+            elif "runlevel" not in listofitens:
+                foundcompliance.runlevel = True
+            if item == "ntp":
+                foundcompliance.ntp = False
+            elif "ntp" not in listofitens:
+                foundcompliance.ntp = True
+            if item == "kernelntwrk":
+                foundcompliance.kernelnetwrk = False
+            elif "kernelnetwrk" not in listofitens:
+                foundcompliance.kernelnetwrk = True
+            if item == "servicos_desnecessarios":
+                foundcompliance.servicos_desnecessarios = False
+            elif "servicos_desnecessarios" not in listofitens:
+                foundcompliance.servicos_desnecessarios = True
+            if item == "servicos_inseguros":
+                foundcompliance.servicos_inseguros = False
+            elif "servicos_inseguros" not in listofitens:
+                foundcompliance.servicos_desnecessarios = True
+            if item == "ctrl_alt_del":
+                foundcompliance.ctrl_alt_del = False
+            elif "ctrl_alt_del" not in listofitens:
+                foundcompliance.ctrl_alt_del = True
+            if item == "compilation_tools":
+                foundcompliance.compilation_tools = False
+            elif "compilation_tools" not in listofitens:
+                foundcompliance.compilation_tools =  True
+            if item == "sulogin":
+                foundcompliance.sulogin = False
+            elif "sulogin" not in listofitens:
+                foundcompliance.sulogin = True
+            if item == "auditd":
+                foundcompliance.auditd = False
+            elif "auditd" not in listofitens:
+                foundcompliance.auditd = True
+            if item == "umask_padrao":
+                foundcompliance.umask_padrao = False
+            elif "umask_padrao" not in listofitens:
+                foundcompliance.umask_padrao = True
+            if item == "root_access":
+                foundcompliance.root_access = False
+            elif "root_access" not in listofitens:
+                foundcompliance.root_access = True
+            if item == "banner":
+                foundcompliance.banner = False
+            elif "banner" not in listofitens:
+                foundcompliance.banner = True
+            if item == "ftp_config":
+                foundcompliance.ftp_config = False
+            elif "ftp_config" not in listofitens:
+                foundcompliance.ftp_config = True
+            if item == "mail_config":
+                foundcompliance.mail_config = False
+            elif "mail_config" not in listofitens:
+                foundcompliance.mail_config = True
+            if item == "sysstat":
+                foundcompliance.sysstat = False
+            elif "sysstat" not in listofitens:
+                foundcompliance.sysstat = True
+            if item == "psacct":
+                foundcompliance.psacct = False
+            elif "psacct" not in listofitens:
+                foundcompliance.psacct = True
+            if item == "log_centralizado":
+                foundcompliance.log_centralizado = False
+            elif "log_centralizado" not in listofitens:
+                foundcompliance.log_centralizado = True
+            if item == "syslog":
+                foundcompliance.syslog = False
+            elif "syslog" not in listofitens:
+                foundcompliance.syslog = True
+            if item == "log_permissions":
+                foundcompliance.log_permissions = False
+            elif "log_permissions" not in listofitens:
+                foundcompliance.log_permissions = True
+            if item == "bash_history_datetime":
+                foundcompliance.bash_history_datetime = False
+            elif "bash_history_datetime" not in listofitens:
+                foundcompliance.bash_history_datetime = True
+            if item == "last_lastb_lastlog":
+                foundcompliance.last_lastb_lastlog = False
+            elif "last_lastb_lastlog" not in listofitens:
+                foundcompliance.last_lastb_lastlog = True
+            if item == "core_dumps":
+                foundcompliance.core_dumps = False
+            elif "core_dumps" not in listofitens:
+                foundcompliance.core_dumps = True
+            if item == "password_complexity":
+                foundcompliance.password_complexity = False
+            elif "password_complexity" not in listofitens:
+                foundcompliance.password_complexity = True
+            if item == "login_fails":
+                foundcompliance.login_fails = False
+            elif "login_fails" not in listofitens:
+                foundcompliance.login_fails = True
+            if item == "old_password":
+                foundcompliance.old_password = False
+            elif "old_password" not in listofitens:
+                foundcompliance.old_password = True
+            if item == "login_policy":
+                foundcompliance.login_policy = False
+            elif "login_policy" not in listofitens:
+                foundcompliance.login_policy = True
+            if item == "usuarios_sem_senha":
+                foundcompliance.usuarios_sem_senha = False
+            elif "usuarios_sem_senha" not in listofitens:
+                foundcompliance.usuarios_sem_senha = True
+            if item == "ssh_root_login":
+                foundcompliance.ssh_root_login = False
+            elif "ssh_root_login" not in listofitens:
+                foundcompliance.ssh_root_login = True
+            if item == "ssh_privilege_separation":
+                foundcompliance.ssh_privilege_separation = False
+            elif "ssh_privilege_separation" not in listofitens:
+                foundcompliance.ssh_privilege_separation = True
+            if item == "ssh_version_2":
+                foundcompliance.ssh_version_2 = False
+            elif "ssh_version_2" not in listofitens:
+                foundcompliance.ssh_version_2 = True
+            if item == "port_forwarding":
+                foundcompliance.port_forwarding = False
+            elif "port_forwarding" not in listofitens:
+                foundcompliance.port_forwarding = True
+            if item == "ssh_strict_mode":
+                foundcompliance.ssh_strict_mode = False
+            elif "ssh_strict_mode" not in listofitens:
+                foundcompliance.ssh_stric_mode = True
+            if item == "banner_ssh":
+                foundcompliance.banner_ssh = False
+            elif "banner_ssh" not in listofitens:
+                foundcompliance.banner_ssh = True
+            if item == "ssh_admins":
+                foundcompliance.ssh_admins = False
+            elif "ssh_admins" not in listofitens:
+                foundcompliance.ssh_admins = True
+            if item == "sftp_disabled":
+                foundcompliance.sftp_disabled = False
+            elif "sftp_disabled" not in listofitens:
+                foundcompliance.sftp_disabled = True
+            if item == "useraccess_blank_password":
+                foundcompliance.useraccess_blank_password = False
+            elif "useraccess_blank_password" not in listofitens:
+                foundcompliance.useraccess_blank_password = True
+            if item == "root_uid":
+                foundcompliance.root_uid = False
+            elif "root_uid" not in listofitens:
+                foundcompliance.root_uid = True
+            if item == "log_system_permissions":
+                foundcompliance.log_system_permissions = False
+            elif "log_system_permissions" not in listofitens:
+                foundcompliance.log_system_permissions = True
+            if item == "user_exist_blank_password":
+                foundcompliance.user_exist_blank_password = False
+            elif "user_exist_blank_password" not in listofitens:
+                foundcompliance.user_exist_blank_password = True
+            if item == "nagios":
+                foundcompliance.nagios =  False
+            elif "nagios" not in listofitens:
+                foundcompliance.nagios = True
+            if item == "trauma0":
+                foundcompliance.trauma0 = False
+            elif "trauma0" not in listofitens:
+                foundcompliance.trauma0 = True
+            if item == "agents_config":
+                foundcompliance.agents_config = False
+            elif "agents_config" not in listofitens:
+                foundcompliance.agents_config = True
+            if item == "sysstat_config":
+                foundcompliance.sysstat_config = False
+            elif "sysstat_config" not in listofitens:
+                foundcompliance.sysstat_config = True
+
 
 
 

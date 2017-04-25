@@ -26,6 +26,8 @@ while True:
 		elif machine.to_scan == True:
 			fabric_checklist_scan(session, machine.ip)
 			machine.scanned = datetime.datetime.now()
+			session.commit()
+			session.flush()
 		elif machine.to_apply == True:
 			fabric_checklist_apply(session, machine.ip)
 	sleep(100)
