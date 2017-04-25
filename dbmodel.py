@@ -30,6 +30,8 @@ class Machine(Base):
 
     ip = Column(String)
     nome = Column(String)
+    user = Column(String, server_default='centos')
+    password = Column(String, server_default='animal')
     compliance = Column(Boolean)
     scanned = Column(DateTime, server_default=func.now())
     to_scan = Column(Boolean)
@@ -41,7 +43,8 @@ class Machine(Base):
 class Compliance_attr(Base):
 
     __tablename__ = "Compliance_attr"
-    machineid = Column(Integer, ForeignKey('Machine.id'),primary_key=True)
+    machineid = Column(Integer, ForeignKey('Machine.id'))
+    id = Column(Integer, primary_key=True)
     machine = relationship("Machine")
     observacoes = Column(String)
     proposito = Column(String)

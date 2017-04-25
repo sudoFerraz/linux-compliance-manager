@@ -8,12 +8,12 @@ userhandler = auxiliary.user_handlers()
 ferramenta = auxiliary.ostools()
 compliancehandler = auxiliary.compliance_handlers()
 
-user = "centos"
-password = "animal"
+#user = "centos"
+#password = "animal"
 
 session = ferramenta.dbconnection(11, 11, 11, 11)
 
-def fabric_checklist_scan(session, ip):
+def fabric_checklist_scan(session, ip, user, password):
 	out = os.popen('sudo fab -H'+user+'@'+ip+' -p '+password+' checklist:\''+ip+'\'').read()
 def fabric_checklist_apply(session, ip):
 	pass
@@ -24,7 +24,7 @@ while True:
 		if machine.compliance == True:
 			pass
 		elif machine.to_scan == True:
-			fabric_checklist_scan(session, machine.ip)
+			fabric_checklist_scan(session, machine.ip, machine.user, machine.password)
 			machine.scanned = datetime.datetime.now()
 			session.commit()
 			session.flush()

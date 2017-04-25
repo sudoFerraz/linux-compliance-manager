@@ -9,6 +9,7 @@ import paramiko
 import hashlib
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm.scoping import scoped_session
 
 from dbmodel import User, Machine, Compliance_attr
 from prettytable import PrettyTable
@@ -55,9 +56,9 @@ class ostools(object):
 		#obfsucar?
 		engine = create_engine\
 		('postgresql://postgres:postgres@localhost/postgres')
-		Session = sessionmaker()
+		Session = scoped_session(sessionmaker())
 		Session.configure(bind=engine)
-		session = Session()
+		session = Session
 		return session
 
 	def get_user(self):

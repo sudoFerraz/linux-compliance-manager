@@ -173,9 +173,9 @@ def checklist(ipmaquina):
             if output:
                 pass
             else:
-                listofitens.append("umask")
+                listofitens.append("umask_padrao")
         else:
-            listofitens.append("umask")
+            listofitens.append("umask_padrao")
         output = run('cat /etc/syslog.conf | grep \"REPLICAR SERVIDOR DE LOG\"')
         if output:
             pass
@@ -185,31 +185,31 @@ def checklist(ipmaquina):
         if output:
             pass
         else:
-            listofitens.append("datetime_bash")
+            listofitens.append("bash_history_datetime")
         output = run('cat /etc/security/limits.conf | grep \"CHECK LIST DE SEGURANCA\"')
         if output:
             pass
         else:
-            listofitens.append("coredumps")
+            listofitens.append("core_dumps")
         output = run('cat /etc/pam.d/system-auth | grep \"password    requisite     pam_cracklib.so try_first_pass retry=3 minlen=8 dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1\"')
         if output:
             pass
         else:
-            listofitens.append("passcomplexity")
+            listofitens.append("password_complexity")
         output = run('cat /etc/pam.d/system-auth | grep \"auth        required      pam_tally2.so deny=5 onerr=fail unlock_time=1800\"')
         if output:
             output = run('cat /etc/pam.d/system-auth |grep \"account     required      pam_tally.so\"')
             if output:
                 pass
             else:
-                listofitens.append("bruteforce")
+                listofitens.append("login_fails")
         else:
-            listofitens.append("bruteforce")
+            listofitens.append("login_fails")
         output = run('cat /etc/pam.d/system-auth | grep \"password    sufficient    pam_unix.so md5 shadow nullok try_first_pass use_authtok remember=15\"')
         if output:
             pass
         else:
-            listofitens.append("rememberpass")
+            listofitens.append("old_passwords")
         output = run('cat /etc/login.defs | grep \"CHECK LIST DE SEGURANCA\"')
         if output:
             output = run('cat /etc/default/useradd | grep -w \"INACTIVE=2\"')
@@ -223,22 +223,22 @@ def checklist(ipmaquina):
         if output:
             pass
         else:
-            listofitens.append("nopassssh")
+            listofitens.append("usuarios_sem_senha")
         output = run('cat /etc/ssh/ssh_config | grep -w \"PermitRootLogin no\"')
         if output:
             pass
         else:
-            listofitens.append("sshrootlogin")
+            listofitens.append("ssh_root_login")
         output = run('cat /etc/ssh/sshd_config | grep -w \"UsePrivilegeSeparation yes\"')
         if output:
             pass
         else:
-            listofitens.append("privilege_separation")
+            listofitens.append("ssh_privilege_separation")
         output = run('cat /etc/ssh/sshd_config | grep -w \"Protocol 2\"')
         if output:
             pass
         else:
-            listofitens.append("ssh_protocol")
+            listofitens.append("ssh_version_2")
         output = run('cat /etc/ssh/sshd_config | grep =w \"AllowTcpForwarding no\"')
         if output:
             output = run('cat /etc/ssh/sshd_config | grep -w \"GatewayPorts no\"')
@@ -247,26 +247,26 @@ def checklist(ipmaquina):
                 if output:
                     pass
                 else:
-                    listofitens.append("ssh_portforwarding")
+                    listofitens.append("port_forwarding")
             else:
-                listofitens.append("ssh_portforwarding")
+                listofitens.append("port_forwarding")
         else:
-            listofitens.append("ssh_portforwarding")
+            listofitens.append("port_forwarding")
         output = run('cat /etc/ssh/sshd_config | grep =w \"StricModes yes\"')
         if output:
             pass
         else:
-            listofitens.append("ssh_stric_mode")
+            listofitens.append("ssh_strict_mode")
         output = run('cat /etc/ssh/sshd_config | grep =w \"Banner /etc/issue.net\"')
         if output:
             pass
         else:
-            listofitens.append("ssh_bannerconf")
+            listofitens.append("banner_ssh")
         output = run('cat /etc/ssh/sshd_config | grep -w \"#Subsystem   sftp   /usr/libexec/sftp-server\"')
         if output:
             pass
         else:
-            listofitens.append("sftp")
+            listofitens.append("sftp_disabled")
         output = run('cat /etc/sysconfig/sysstat | grep -w \"HISTORY=30\"')
         if output:
             output = run('cat /etc/sysconfig/sysstat | grep -w \"COMPRESSAFTER=2\"')
@@ -277,13 +277,13 @@ def checklist(ipmaquina):
                     if output:
                         pass
                     else:
-                        listofitens.append("sysstatconfig")
+                        listofitens.append("sysstat_config")
                 else:
-                    listofitens.append("sysstatconfig")
+                    listofitens.append("sysstat_config")
             else:
-                listofitens.append("sysstatconfig")
+                listofitens.append("sysstat_config")
         else:
-            listofitens.append("sysstatconfig")
+            listofitens.append("sysstat_config")
         out = run('stat -c \"%a\" /var/spool/cron')
         if out == "400":
             out = run('stat -c \"%a\" /etch/shadow')
@@ -312,46 +312,46 @@ def checklist(ipmaquina):
                                                         if out == "644":
                                                             pass
                                                         else:
-                                                            listofitens.append("systempermissions")
+                                                            listofitens.append("log_system_permissions")
                                                     else:
-                                                        listofitens.append("systempermissions")
+                                                        listofitens.append("log_system_permissions")
                                                 else:
-                                                    listofitens.append("systempermissions")
+                                                    listofitens.append("log_system_permissions")
                                             else:
-                                                listofitens.append("systempermissions")
+                                                listofitens.append("log_system_permissions")
                                         else:
-                                            listofitens.append("systempermissions")
+                                            listofitens.append("log_system_permissions")
                                     else:
-                                        listofitens.append("systempermissions")
+                                        listofitens.append("log_system_permissions")
                                 else:
-                                    listofitens.append("systempermissions")
+                                    listofitens.append("log_system_permissions")
                             else:
-                                listofitens.append("systempermissions")
+                                listofitens.append("log_system_permissions")
                         else:
-                            listofitens.append("systempermissions")
+                            listofitens.append("log_system_permissions")
                     else:
-                        listofitens.append("systempermissions")
+                        listofitens.append("log_system_permissions")
                 else:
-                    listofitens.append("systempermissions")
+                    listofitens.append("log_system_permissions")
             else:
-                listofitens.append("systempermissions")
+                listofitens.append("log_system_permissions")
         else:
-            listofitens.append("systempermissions")
+            listofitens.append("log_system_permissions")
         output = run('cat /etc/ssh/sshd_config | grep -w \"PermitEmpyPasswords no\"')
         if output:
             pass
         else:
-            listofitens.append("blankpass_ssh")
+            listofitens.append("useraccess_blank_password")
         output = run('getent passwd | awk -F: \'$3 == \"0\" { print $1 }\' ')
         if output == "root":
             pass
         else:
-            listofitens.append("rootuid")
+            listofitens.append("root_uid")
         output = run('cat /etc/shadow | awk -F: \'$2 == \"!!\" { print $1 }\'')
         if output:
             pass
         else:
-            listofitens.append("userblankpass")
+            listofitens.append("user_exist_blank_password")
         output = run('systemctl get-default')
         if output == "multi-user.target":
             pass
@@ -376,28 +376,28 @@ def checklist(ipmaquina):
             if output:
                 pass
             else:
-                listofitens.append("mailserver")
+                listofitens.append("mail_config")
         else:
-            listofitens.append("mailserver")
+            listofitens.append("mail_config")
         output = run('yum list installed sysstat')
         if output == True:
             pass
         else:
-            listofitens.append("check_sysstat")
+            listofitens.append("sysstat")
         output = run('cat /etc/pam.d/su')
         if "auth required pam wheel.so use uid" in output:
             pass
         else:
-            listofitens.append("suwheel")
+            listofitens.append("root_access")
         output = run('cat /etc/sysctl.d/100-backlog.conf | grep \"Check List\"')
         if output:
             output = run('cat /etc/sysctl.conf | grep \"Check List\"')
             if output:
                 pass
             else:
-                listofitens.append("kernel_network")
+                listofitens.append("kernelntwrk")
         else:
-            listofitens.append("kernel_network")
+            listofitens.append("kernelntwrk")
         #FAZER O UPDATE NA TABELA
         print listofitens
         foundmachine = session.query(Machine).filter_by(ip=ipmaquina).first()

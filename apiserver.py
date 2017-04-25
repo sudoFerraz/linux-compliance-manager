@@ -38,6 +38,14 @@ admin = Admin(app)
 ferramenta = auxiliary.ostools()
 session = ferramenta.dbconnection(11, 1, 1, 1)
 
+
+@app.teardown_request
+def app_teardown(response_or_exc):
+    # Assuming that `session` is your scoped session 
+    session.remove()
+    return response_or_exc
+
+
 class MyModelView(ModelView):
     def __init__(self, model, session, name=None, category=None, endpoint=None, url=None, **kwargs):
         for k, v in kwargs.iteritems():
@@ -55,8 +63,8 @@ class ComplianceView(ModelView):
 	column_list = ('machineid', 'observacoes', 'proposito', 'particionamento')
 
 admin.add_view(MyModelView(User, session,editable_columns=['user', 'name', 'password', 'usertype'], list_columns=['user', 'name', 'password', 'usertype']))
-admin.add_view(ModelView(Machine, session))
-admin.add_view(ModelView(Compliance_attr, session))
+admin.add_view(MyModelView(Machine, session,editable_columns=['ip', 'nome', 'compliance', 'scanned', 'to_scan', 'to_apply', 'user', 'password'], list_columns=['ip', 'nome', 'compliance', 'scanned', 'to_scan', 'to_apply']))
+admin.add_view(MyModelView(Compliance_attr, session))
 
 
 #GET REQUEST
@@ -64,6 +72,7 @@ admin.add_view(ModelView(Compliance_attr, session))
 @app.route('/readHello')
 def getRequestHello():
 	return "Hi, I got your GET Request!"
+	session.flush()
 
 @app.route('/getmachine/<int:id>')
 def getmachinesid(id):
@@ -88,6 +97,7 @@ def getallmachines():
 @app.route('/')
 def getroot():
 	return "Hello" 
+	session.flush()
 
 
 #POST REQUEST
