@@ -16,6 +16,7 @@ from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
 from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import InputRequired, Email, Length
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user, request, redirect
 
 
 
@@ -66,6 +67,24 @@ admin.add_view(MyModelView(User, session,editable_columns=['user', 'name', 'pass
 admin.add_view(MyModelView(Machine, session,editable_columns=['ip', 'nome', 'compliance', 'scanned', 'to_scan', 'to_apply', 'user', 'password'], list_columns=['ip', 'nome', 'compliance', 'scanned', 'to_scan', 'to_apply']))
 admin.add_view(MyModelView(Compliance_attr, session))
 
+@app.route('/logout')
+@login_required
+def logout():
+	logout_user()
+	return "You are now logged out"
+
+@app.route('/teste')
+@login_required
+def teste():
+	return "Testefunfa"
+
+@app.route('/')
+def index():
+	session['next'] = request.args.get('next')
+	#pegar o user com um formulario
+	#login_user(user)
+	return render_template('login.html')
+
 
 #GET REQUEST
 
@@ -94,10 +113,7 @@ def getallmachines():
 		#for machinejson in jsonlist:
 		#	jsonanswer
 
-@app.route('/')
-def getroot():
-	return "Hello" 
-	session.flush()
+
 
 
 #POST REQUEST
