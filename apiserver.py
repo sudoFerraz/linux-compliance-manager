@@ -1,5 +1,5 @@
 #THIS IS A WEBSERVER FOR DEMONSTRATING THE TYPES OF RESPONSES WE SEE FROM AN API ENDPOINT
-from flask import Flask
+from flask import Flask, render_template
 import auxiliary
 import flask_serialize
 from flask import jsonify
@@ -27,7 +27,7 @@ class LoginForm(FlaskForm):
 	password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
 	remember = BooleanField('remember me')
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost/postgres'
 app.config['SECRET_KEY'] = 'postgres'
@@ -38,6 +38,10 @@ admin = Admin(app)
 
 ferramenta = auxiliary.ostools()
 session = ferramenta.dbconnection(11, 1, 1, 1)
+userhandler = auxiliary.user_handlers()
+machinehandler = auxiliary.machine_handler()
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 
 @app.teardown_request
@@ -78,12 +82,28 @@ def logout():
 def teste():
 	return "Testefunfa"
 
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+	if request.method == 'GET':
+		return render_template('login.html')
+	if request.method == 'POST':
+		username = request.form['Username']
+		password = request.form['Password']
+		user = userhandler.get_user(session, username)
+		if user:
+			if user.password == password:
+				login_user(user)
+		elif user == False:
+			return '<h1> User not found</h1>'
+
+		return '<h1> You are logged now</h1>'
+
+
 @app.route('/')
 def index():
-	session['next'] = request.args.get('next')
 	#pegar o user com um formulario
 	#login_user(user)
-	return render_template('login.html')
+	return redirect('/login.html')
 
 
 #GET REQUEST

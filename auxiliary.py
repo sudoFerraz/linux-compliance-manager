@@ -104,8 +104,8 @@ class user_handlers(object):
 		self.user = newuser.user
 		return newuser
 
-	def get_user(self, session, userid):
-		founduser = session.query(Users).filter_by(user=userid).first()
+	def get_user(self, session, username):
+		founduser = session.query(Users).filter_by(user=username).first()
 		if not founduser:
 			return False
 		if founduser.user == userid:
