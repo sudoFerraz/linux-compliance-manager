@@ -13,3 +13,52 @@ Máquinas - Machine
 Lista de atributos de segurança de uma máquina - Compliance_attr
 #
 
+
+Lista de severidade para atributos de compliance
+
+Timezone = 1
+SELinux = 2
+SenhaGrub = 2
+Updated = 2
+IPV6 = 1
+RunLevel = 2
+NTP = 3
+KernelNtwrk = 2
+Servicos Desnecessarios = 3
+Servicos Inseguros = 3
+Ctrl Alt Del = 2
+Compilation Tools = 2
+SuLogin = 2
+AuditD = 2
+Umask Padrao = 3
+Root Acess = 3
+Banner = 1
+Ftp Config = 3
+Mail Config = 2
+Sysstat = 2
+psacct = 2
+Log Centralizado = 2
+SysLog = 3
+Log Permissions = 3
+Bash History Datetime = 2
+Last Lastb Lastlog = 3
+Core Dumps = 2
+Password Complexity = 2
+Login Fails = 3
+Usuarios sem senha = 3
+SSH root Login = 4
+SSh privilege separation = 3
+SSh version 2 = 3
+Port Forwarding = 2
+SSH Strict Mode = 2
+Banner SSH = 1
+SSH Admins = 2
+SFTP Disabled = 2
+UserAccess Blank Password = 3
+Root UID = 4
+Log System Permissions = 3
+User Exist Blank Password = 3
+Nagios = 2
+Trauma0 = 2
+Agents config = 2
+Sysstat Config = 2

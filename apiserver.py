@@ -105,8 +105,8 @@ def media_attr():
 	machine_ids = [x for x in range(50)]
 	bins = [x for x in range(50)]
 	plt.hist(attr_machine_list, bins, histtype='stepfilled',rwidth=0.8)
-	plt.xlabel('N of machines with y TRUE attributes')
-	plt.ylabel('Number of attributes per machine')
+	plt.xlabel('Number of positive attributes')
+	plt.ylabel('Number of machines')
 	plt.legend
 	#return jsonify(attr_machine_list)
 	return plt.show()
