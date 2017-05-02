@@ -7,6 +7,8 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.sql import func
+#from flask.ext.login import UserMixin
+#from flask_login import UserMixin
 
 Base = declarative_base()
 

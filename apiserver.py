@@ -17,6 +17,8 @@ from flask_bootstrap import Bootstrap
 from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import InputRequired, Email, Length
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user, request, redirect
+import matplotlib.pyplot as plt
+
 
 
 
@@ -40,8 +42,23 @@ ferramenta = auxiliary.ostools()
 session = ferramenta.dbconnection(11, 1, 1, 1)
 userhandler = auxiliary.user_handlers()
 machinehandler = auxiliary.machine_handler()
+compliancehandler = auxiliary.compliance_handlers()
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+def get_machine_graph():
+	safecount = 0
+	falsecount = 0
+	foundmachines = machinehandler.get_all_safe(session)
+	for machine in foundmachines:
+		safecount = safecount + 1
+	foundmachines = machinehandler.get_all_false(session)
+	for machine in foundmachines:
+		falsecount = falsecount + 1
+	machinenumber = falsecount + safecount
+	compliancenumber = safecount
+	return falsecount, compliancenumber
+
 
 
 @app.teardown_request
@@ -77,6 +94,35 @@ def logout():
 	logout_user()
 	return "You are now logged out"
 
+@app.route('/media_attr')
+def media_attr():
+	attr_machine_list = []
+	foundmachines = machinehandler.get_all_machines(session)
+	for machine in foundmachines:
+		machine_attr_number = compliancehandler.get_number_attr_true(session, machine.id)
+		attr_machine_list.append(machine_attr_number)
+	#x for x in range(len(attr_machine_list))
+	machine_ids = [x for x in range(50)]
+	bins = [x for x in range(50)]
+	plt.hist(attr_machine_list, bins, histtype='stepfilled',rwidth=0.8)
+	plt.xlabel('N of machines with y TRUE attributes')
+	plt.ylabel('Number of attributes per machine')
+	plt.legend
+	#return jsonify(attr_machine_list)
+	return plt.show()
+
+@app.route('/testeplot')
+def testeplot():
+	labels = 'Compliance', 'N-Compliance'
+	x, y = get_machine_graph()
+	sizes = [y, x]
+	explode = (0, 0.1)
+	fig1, ax1 = plt.subplots()
+	ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%', shadow=True, startangle=90)
+	ax1.axis('equal')
+	return plt.show()
+
+
 @app.route('/teste')
 @login_required
 def teste():
@@ -85,7 +131,7 @@ def teste():
 @app.route('/login', methods=['POST', 'GET'])
 def login():
 	if request.method == 'GET':
-		return render_template('login.html')
+		return render_template('/login.html')
 	if request.method == 'POST':
 		username = request.form['Username']
 		password = request.form['Password']
@@ -103,7 +149,7 @@ def login():
 def index():
 	#pegar o user com um formulario
 	#login_user(user)
-	return redirect('/login.html')
+	return redirect('/login')
 
 
 #GET REQUEST

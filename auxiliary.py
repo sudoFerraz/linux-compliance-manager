@@ -105,10 +105,10 @@ class user_handlers(object):
 		return newuser
 
 	def get_user(self, session, username):
-		founduser = session.query(Users).filter_by(user=username).first()
+		founduser = session.query(User).filter_by(user=username).first()
 		if not founduser:
 			return False
-		if founduser.user == userid:
+		if founduser.user == username:
 			return founduser
 		else:
 			return False
@@ -257,21 +257,15 @@ class machine_handler(object):
 		session.flush()
 		return foundmachine
 
-	def get_all_safe(self, session, idmaquina):
+	def get_all_safe(self, session):
 		"""Retornando a pretty table e depois a lista"""
-		t = PrettyTable(['Id maquina', 'IP maquina'])
 		foundmachines = session.query(Machine).filter_by(compliance=True)
-		for foundmachine in foundmachines:
-			t.add_row([foundmachine.id, foundmachine.ip])
-		return t, foundmachines
+		return foundmachines
 
-	def get_all_false(self, session, idmaquina):
+	def get_all_false(self, session):
 		"""Retornando a pretty table e depois a lista"""
-		t = PrettyTable(['ID maquina', 'Ip maquina'])
 		foundmachines = session.query(Machine).filter_by(compliance=False)
-		for foundmachine in foundmachines:
-			t.add_row([foundmachine.id, foundmachine.ip])
-		return t, foundmachines
+		return foundmachines
 
 
 
@@ -280,6 +274,113 @@ class compliance_handlers(object):
 	"""Classe para ajudar no manuseamento da tabela COMPLIANCE_ATTR"""
 	def __init__(self):
 		self.machineid = ""
+
+	def get_number_attr_true(self, session, idmachine):
+		foundmachine = session.query(Compliance_attr)\
+		.filter_by(machineid=idmachine)
+		attr_number = 0
+		for machine in foundmachine:
+			if machine.particionamento == True:
+				attr_number = attr_number + 1
+			if machine.timezone == True:
+				attr_number = attr_number + 1
+			if machine.selinux == True:
+				attr_number = attr_number + 1
+			if machine.senhagrub == True:
+				attr_number = attr_number + 1
+			if machine.updated == True:
+				attr_number = attr_number + 1
+			if machine.ipv6 == True:
+				attr_number = attr_number + 1
+			if machine.runlevel == True:
+				attr_number = attr_number + 1
+			if machine.ntp == True:
+				attr_number = attr_number + 1
+			if machine.kernelntwrk == True:
+				attr_number = attr_number + 1
+			if machine.servicos_desnecessarios == True:
+				attr_number = attr_number + 1
+			if machine.servicos_inseguros == True:
+				attr_number = attr_number + 1
+			if machine.ctrl_alt_del == True:
+				attr_number = attr_number + 1
+			if machine.compilation_tools == True:
+				attr_number = attr_number + 1
+			if machine.sulogin == True:
+				attr_number = attr_number + 1
+			if machine.auditd == True:
+				attr_number = attr_number + 1
+			if machine.umask_padrao == True:
+				attr_number = attr_number + 1
+			if machine.root_access == True:
+				attr_number = attr_number + 1
+			if machine.banner == True:
+				attr_number = attr_number + 1
+			if machine.ftp_config == True:
+				attr_number = attr_number + 1
+			if machine.mail_config == True:
+				attr_number = attr_number + 1
+			if machine.sysstat == True:
+				attr_number = attr_number + 1
+			if machine.psacct == True:
+				attr_number = attr_number + 1
+			if machine.log_centralizado == True:
+				attr_number = attr_number + 1
+			if machine.syslog == True:
+				attr_number = attr_number + 1
+			if machine.log_permissions == True:
+				attr_number = attr_number + 1
+			if machine.bash_history_datetime == True:
+				attr_number = attr_number + 1
+			if machine.last_lastb_lastlog == True:
+				attr_number = attr_number + 1
+			if machine.core_dumps == True:
+				attr_number = attr_number + 1
+			if machine.password_complexity == True:
+				attr_number = attr_number + 1
+			if machine.login_fails == True:
+				attr_number = attr_number + 1
+			if machine.old_passwords == True:
+				attr_number = attr_number + 1
+			if machine.login_policy == True:
+				attr_number = attr_number + 1
+			if machine.usuarios_sem_senha == True:
+				attr_number = attr_number + 1
+			if machine.ssh_root_login == True:
+				attr_number = attr_number + 1
+			if machine.ssh_privilege_separation == True:
+				attr_number = attr_number + 1
+			if machine.ssh_version_2 == True:
+				attr_number = attr_number + 1
+			if machine.port_forwarding == True:
+				attr_number = attr_number + 1
+			if machine.ssh_strict_mode == True:
+				attr_number = attr_number + 1
+			if machine.banner_ssh == True:
+				attr_number = attr_number + 1
+			if machine.ssh_admins == True:
+				attr_number = attr_number + 1
+			if machine.sftp_disabled == True:
+				attr_number = attr_number + 1
+			if machine.useraccess_blank_password == True:
+				attr_number = attr_number + 1
+			if machine.root_uid == True:
+				attr_number = attr_number + 1
+			if machine.log_system_permissions == True:
+				attr_number = attr_number + 1
+			if machine.user_exist_blank_password == True:
+				attr_number = attr_number + 1
+			if machine.nagios == True:
+				attr_number = attr_number + 1
+			if machine.trauma0 == True:
+				attr_number = attr_number + 1
+			if machine.agents_config == True:
+				attr_number = attr_number + 1
+			if machine.sysstat_config == True:
+				attr_number = attr_number + 1
+			return attr_number
+
+
 
 	def get_print(self, session, idmachine):
 		"""Retornando print"""
