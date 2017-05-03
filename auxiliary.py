@@ -275,6 +275,111 @@ class compliance_handlers(object):
 	def __init__(self):
 		self.machineid = ""
 
+	def get_severity_sum(self, session, idmachine):
+		foundmachine = session.query(Compliance_attr)\
+		.filter_by(machineid=idmachine)
+		severitysum = 0
+		for machine in foundmachine:
+			if machine.particionamento == False:
+				severitysum = severitysum + 1
+			if machine.timezone == False:
+				severitysum = severitysum + 1
+			if machine.selinux == False:
+				severitysum = severitysum + 2
+			if machine.senhagrub == False:
+				severitysum = severitysum + 2
+			if machine.updated == False:
+				severitysum = severitysum + 2
+			if machine.ipv6 == False:
+				severitysum = severitysum + 1
+			if machine.runlevel == False:
+				severitysum = severitysum + 2
+			if machine.ntp == False:
+				severitysum = severitysum + 3
+			if machine.kernelntwrk == False:
+				severitysum = severitysum + 2
+			if machine.servicos_desnecessarios == False:
+				severitysum = severitysum + 3
+			if machine.servicos_inseguros == False:
+				severitysum = severitysum + 3
+			if machine.ctrl_alt_del == False:
+				severitysum = severitysum + 2
+			if machine.compilation_tools == False:
+				severitysum = severitysum + 2
+			if machine.sulogin == False:
+				severitysum = severitysum + 2
+			if machine.auditd == False:
+				severitysum = severitysum + 2
+			if machine.umask_padrao == False:
+				severitysum = severitysum + 3
+			if machine.root_access == False:
+				severitysum = severitysum + 3
+			if machine.banner == False:
+				severitysum = severitysum + 1
+			if machine.ftp_config == False:
+				severitysum = severitysum + 3
+			if machine.mail_config == False:
+				severitysum = severitysum + 2
+			if machine.sysstat == False:
+				severitysum = severitysum + 2
+			if machine.psacct == False:
+				severitysum = severitysum + 2
+			if machine.log_centralizado == False:
+				severitysum = severitysum + 2
+			if machine.syslog == False:
+				severitysum = severitysum + 3
+			if machine.log_permissions == False:
+				severitysum = severitysum + 3
+			if machine.bash_history_datetime == False:
+				severitysum = severitysum + 2
+			if machine.last_lastb_lastlog == False:
+				severitysum = severitysum + 3
+			if machine.core_dumps == False:
+				severitysum = severitysum + 2
+			if machine.password_complexity == False:
+				severitysum = severitysum + 2
+			if machine.login_fails == False:
+				severitysum = severitysum + 3
+			if machine.usuarios_sem_senha == False:
+				severitysum = severitysum + 3
+			if machine.ssh_root_login == False:
+				severitysum = severitysum + 4
+			if machine.ssh_privilege_separation == False:
+				severitysum = severitysum + 3
+			if machine.ssh_version_2 == False:
+				severitysum = severitysum + 3
+			if machine.port_forwarding == False:
+				severitysum = severitysum + 2
+			if machine.ssh_strict_mode == False:
+				severitysum = severitysum + 2
+			if machine.banner_ssh == False:
+				severitysum = severitysum + 1
+			if machine.ssh_admins == False:
+				severitysum = severitysum + 2
+			if machine.sftp_disabled == False:
+				severitysum = severitysum + 2
+			if machine.useraccess_blank_password == False:
+				severitysum = severitysum + 3
+			if machine.root_uid == False:
+				severitysum = severitysum + 4
+			if machine.log_system_permissions == False:
+				severitysum = severitysum + 3
+			if machine.user_exist_blank_password == False:
+				severitysum = severitysum + 3
+			if machine.nagios == False:
+				severitysum = severitysum + 2
+			if machine.trauma0 == False:
+				severitysum = severitysum + 2
+			if machine.agents_config == False:
+				severitysum = severitysum + 2
+			if machine.sysstat_config == False:
+				severitysum = severitysum + 2
+		return severitysum
+
+
+
+
+
 	def get_number_attr_true(self, session, idmachine):
 		foundmachine = session.query(Compliance_attr)\
 		.filter_by(machineid=idmachine)

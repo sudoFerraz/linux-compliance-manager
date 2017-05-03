@@ -16,6 +16,7 @@ Lista de atributos de segurança de uma máquina - Compliance_attr
 
 Lista de severidade para atributos de compliance
 
+Particionamento = 1
 Timezone = 1
 SELinux = 2
 SenhaGrub = 2

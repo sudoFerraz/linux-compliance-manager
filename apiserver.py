@@ -12,6 +12,7 @@ from flask_admin import Admin
 from dbmodel import User
 from dbmodel import Machine
 from dbmodel import Compliance_attr
+from dbmodel import BossHelper
 from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
 from wtforms import StringField, PasswordField, BooleanField
@@ -87,12 +88,55 @@ class ComplianceView(ModelView):
 admin.add_view(MyModelView(User, session,editable_columns=['user', 'name', 'password', 'usertype'], list_columns=['user', 'name', 'password', 'usertype']))
 admin.add_view(MyModelView(Machine, session,editable_columns=['ip', 'nome', 'compliance', 'scanned', 'to_scan', 'to_apply', 'user', 'password'], list_columns=['ip', 'nome', 'compliance', 'scanned', 'to_scan', 'to_apply']))
 admin.add_view(MyModelView(Compliance_attr, session))
+admin.add_view(MyModelView(BossHelper, session))
+
 
 @app.route('/logout')
 @login_required
 def logout():
 	logout_user()
 	return "You are now logged out"
+
+import numpy as np
+from matplotlib import mlab
+
+"""@app.route('/plotest')
+def plotest():
+	x0 = np.random.randn(500)
+	x1 = np.random.randn(500)+1
+
+	trace1 = go.Histogram(x=x0, histnorm='count', name='control', autobinx=False,xbins=dict(start=-3.5, end=3.0,size=0.5), marker=dict(color='#FFD7E9'), opacity=0.75)
+	trace2 = go.Histogram(x=x1, name='experimental', autobinx=False, xbins=dict(start=-2.0,end=5,size=0.5), marker=dict(color='#EB89B5'), opacity=0.75)
+	data = [trace1, trace2]
+	layout = go.Layout(title='Sampled Resutls', xaxis=dict(title='Value'), yaxis=dict(title='Count'), bargap=0.2, bargroupgap=0.1)
+	fig = go.Figure(data=data, layout=layout)
+	py.iplot(fig, filename='Styled histogram')
+"""
+@app.route('/matplottest')
+def matplottest():
+	np.random.seed(0)
+	mu = 200
+	sigma = 25
+	n_bins = 50
+	x = np.random.normal(mu, sigma, size=100)
+
+	fig, ax = plt.subplots(figsize=(8, 4))
+	n, bins, patches = ax.hist(x, n_bins, normed=1, histtype='step', cumulative=True, label='Empirical')
+	y = mlab.normpdf(bins, mu, sigma).cumsum()
+	y /= y[-1]
+
+	ax.plot(bins, y, 'k--', linewidth=1.5, label='Theoretical')
+	ax.hist(x, bins=bins, normed=1, histtype='step', cumulative=-1, label='Reversed emp.')
+
+	ax.grid(True)
+	ax.legend(loc='right')
+	ax.set_title('Cumulative step histograms')
+	ax.set_xlabel('Annual rainfall (mm)')
+	ax.set_ylabel('Likelihood of occurrence')
+	return plt.show()
+
+
+
 
 @app.route('/media_attr')
 def media_attr():
@@ -122,6 +166,26 @@ def testeplot():
 	ax1.axis('equal')
 	return plt.show()
 
+@app.route('/severityplot')
+def severityplot():
+	labels = 'severity', 'machine'
+	severity_machine_list = []
+	foundmachines = machinehandler.get_all_machines(session)
+	for machine in foundmachines:
+		machine_severity = compliancehandler.get_severity_sum(session, machine.id)
+		severity_machine_list.append(machine_severity)
+	#x = [x for x in range(len(severity_machine_list))]
+	#y = severity_machine_list
+	#plt.bar(x, y, label='Severity-per-machine')
+	#plt.show()
+	#bins = [x for x in range(len(severity_machine_list))]
+	#plt.hist(severity_machine_list, bins, histtype='stepfilled')
+	y = [x for x in range(len(severity_machine_list))]
+	plt.bar(y, severity_machine_list)
+	plt.grid(True)
+	plt.ylabel("Severity degree")
+	plt.xlabel("Number of machines with")
+	return plt.show()
 
 @app.route('/teste')
 @login_required
@@ -195,8 +259,6 @@ def updateRequestHello():
 @app.route('/deleteHello', methods = ['DELETE'])
 def deleteRequestHello():
 	return "Deleting your hard drive.....haha just kidding! I received a DELETE request!"
-""""
-if __name__ == '__main__':
-    app.debug = True
-    app.run(host='0.0.0.0', port=5000)	"""
-    
+
+app.run(host='0.0.0.0')
+

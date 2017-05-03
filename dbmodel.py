@@ -25,6 +25,12 @@ class User(Base):
         return "<User(name='%s', password='%s', usertype='%s')>" %(
             self.name, self.password, self.usertype)
 
+class BossHelper(Base):
+    __tablename__ = "BossHelper"
+    id = Column(Integer, primary_key=True)
+    observacoes = Column(String)
+    data_desta = Column(DateTime, server_default=func.now())
+
 class Machine(Base):
 
     __tablename__ = 'Machine'
