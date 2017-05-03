@@ -275,6 +275,10 @@ class compliance_handlers(object):
 	def __init__(self):
 		self.machineid = ""
 
+	def get_all_compliances(self, session):
+		foundcompliances = session.query(Compliance_attr).order_by(id)
+		return foundcompliances
+
 	def get_severity_sum(self, session, idmachine):
 		foundmachine = session.query(Compliance_attr)\
 		.filter_by(machineid=idmachine)
