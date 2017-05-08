@@ -2,7 +2,7 @@
 
 import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Boolean, Date, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, Date, DateTime, LargeBinary
 from sqlalchemy import ForeignKey
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, relationship
@@ -11,6 +11,14 @@ from sqlalchemy.sql import func
 #from flask_login import UserMixin
 
 Base = declarative_base()
+
+class Graphics(Base):
+
+    __tablename__ = 'Graphics'
+    id = Column(Integer, primary_key=True)
+    last_updated = Column(DateTime, server_default=func.now())
+    name = Column(String)
+    image = Column(LargeBinary)
 
 class User(Base):
 

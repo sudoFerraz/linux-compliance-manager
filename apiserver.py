@@ -19,7 +19,9 @@ from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import InputRequired, Email, Length
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user, request, redirect
 import matplotlib.pyplot as plt
-
+import matplotlib.patches as mpatches
+import os.path as op
+from flask_admin.contrib.fileadmin import FileAdmin
 
 
 
@@ -37,7 +39,7 @@ app.config['SECRET_KEY'] = 'postgres'
 
 db = SQLAlchemy(app)
 
-admin = Admin(app)
+admin = Admin(app, template_mode='bootstrap3')
 
 ferramenta = auxiliary.ostools()
 session = ferramenta.dbconnection(11, 1, 1, 1)
@@ -85,10 +87,29 @@ class ComplianceView(ModelView):
 	column_hide_backrefs = False
 	column_list = ('machineid', 'observacoes', 'proposito', 'particionamento')
 
+
+
+path = op.join(op.dirname(__file__), 'static')
+admin.add_view(FileAdmin(path, '/static/', name='Static Files'))
 admin.add_view(MyModelView(User, session,editable_columns=['user', 'name', 'password', 'usertype'], list_columns=['user', 'name', 'password', 'usertype']))
 admin.add_view(MyModelView(Machine, session,editable_columns=['ip', 'nome', 'compliance', 'scanned', 'to_scan', 'to_apply', 'user', 'password'], list_columns=['ip', 'nome', 'compliance', 'scanned', 'to_scan', 'to_apply']))
 admin.add_view(MyModelView(Compliance_attr, session))
 admin.add_view(MyModelView(BossHelper, session))
+
+
+#class Myform(BaseForm):
+#	upload = ImageUploadField('File', thumbgen=thumb_name)
+
+def thumb_name(filename):
+	name, _ = op.splitet(filename)
+	return secure_filename('%s-thumb.jpg' % name)
+
+def prefix_name(obj, file_data):
+	parts = op.splitext(file_data.filename)
+	return secure_filename('file-%s%s' % parts)
+
+#class MyForm(BaseForm):
+#	upload = FileUploadField('File', namegen=prefix_name)
 
 
 @app.route('/logout')
@@ -113,6 +134,7 @@ def plotest():
 	py.iplot(fig, filename='Styled histogram')
 """
 @app.route('/matplottest')
+@login_required
 def matplottest():
 	np.random.seed(0)
 	mu = 200
@@ -138,21 +160,31 @@ def matplottest():
 
 
 
-@app.route('/media_attr')
+@app.route('/positive_attr')
 def media_attr():
 	attr_machine_list = []
+	id_machine_list = []
 	foundmachines = machinehandler.get_all_machines(session)
 	for machine in foundmachines:
 		machine_attr_number = compliancehandler.get_number_attr_true(session, machine.id)
 		attr_machine_list.append(machine_attr_number)
+		id_machine_list.append(machine.nome)
 	#x for x in range(len(attr_machine_list))
-	machine_ids = [x for x in range(50)]
+	"""machine_ids = [x for x in range(50)]
 	bins = [x for x in range(50)]
 	plt.hist(attr_machine_list, bins, histtype='stepfilled',rwidth=0.8)
+	"""#return jsonify(attr_machine_list)
+	#teste
+	attr_machine_list.append(22)
+	attr_machine_list.append(52)
+	attr_machine_list.append(12)
+	attr_machine_list.append(2)
+	y = [x for x in range(len(attr_machine_list))]
+	plt.bar(y, attr_machine_list)
 	plt.xlabel('Number of positive attributes')
 	plt.ylabel('Number of machines')
-	plt.legend
-	#return jsonify(attr_machine_list)
+	legenda = mpatches.Patch(color='blue', label='X = MachineID')
+	plt.legend(handles=[legenda])
 	return plt.show()
 
 @app.route('/testeplot')
@@ -170,10 +202,12 @@ def testeplot():
 def severityplot():
 	labels = 'severity', 'machine'
 	severity_machine_list = []
+	id_machine_list = []
 	foundmachines = machinehandler.get_all_machines(session)
 	for machine in foundmachines:
 		machine_severity = compliancehandler.get_severity_sum(session, machine.id)
 		severity_machine_list.append(machine_severity)
+		id_machine_list.append(machine.id)
 	#x = [x for x in range(len(severity_machine_list))]
 	#y = severity_machine_list
 	#plt.bar(x, y, label='Severity-per-machine')
@@ -181,10 +215,40 @@ def severityplot():
 	#bins = [x for x in range(len(severity_machine_list))]
 	#plt.hist(severity_machine_list, bins, histtype='stepfilled')
 	y = [x for x in range(len(severity_machine_list))]
-	plt.bar(y, severity_machine_list)
+	y.append(y[-1]+1)
+	plt.scatter(id_machine_list, severity_machine_list, color='r', s=100, marker='X')
 	plt.grid(True)
+	plt.xticks(y)
 	plt.ylabel("Severity degree")
-	plt.xlabel("Number of machines with")
+	plt.xlabel("Machine ID")
+	return plt.show()
+
+@app.route('/pie_severity')
+def pie_severity():
+	x,y,z = 0,0,0
+	labels = 'Grupo de Baixo Risco', 'Grupo de Medio Risco', 'Grupo de Alto Risco'
+	severity_machine_list = []
+	id_machine_list = []
+	foundmachines = machinehandler.get_all_machines(session)
+	for machine in foundmachines:
+		machine_severity = compliancehandler.get_severity_sum(session, machine.id)
+		severity_machine_list.append(machine_severity)
+		#RETIRAR PARA PRODUCAOO
+		severity_machine_list.append(3)
+	for severity in severity_machine_list:
+		if severity < 20:
+			x = x + 1
+		elif severity >= 20 and severity <= 90:
+			y = y + 1
+		elif severity > 90:
+			z = z + 1
+
+	sizes = [x, y, z]
+	explode = (0,0,0.1)
+	fig1, ax1 = plt.subplots()
+	ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%', shadow=True, startangle=90)
+	ax1.axis('equal')
+
 	return plt.show()
 
 @app.route('/teste')
@@ -207,6 +271,12 @@ def login():
 			return '<h1> User not found</h1>'
 
 		return '<h1> You are logged now</h1>'
+
+
+@app.route('/testelogin', methods=['POST', 'GET'])
+def testelogin():
+	if request.method == 'POST':
+		return 
 
 
 @app.route('/')

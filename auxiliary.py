@@ -276,7 +276,7 @@ class compliance_handlers(object):
 		self.machineid = ""
 
 	def get_all_compliances(self, session):
-		foundcompliances = session.query(Compliance_attr).order_by(id)
+		foundcompliances = session.query(Compliance_attr)
 		return foundcompliances
 
 	def get_severity_sum(self, session, idmachine):
@@ -543,8 +543,7 @@ class compliance_handlers(object):
 			return False
 
 	def cria(self, session, idmaquina):
-		print "Criando compliance da maquina " + idmaquina
-		newcompliance = dbmodel.Compliance_attr(id=idmaquina)
+		newcompliance = dbmodel.Compliance_attr(machineid=idmaquina)
 		session.add(newcompliance)
 		session.commit()
 		session.flush()
