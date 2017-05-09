@@ -4,9 +4,11 @@ import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, Boolean, Date, DateTime, LargeBinary
 from sqlalchemy import ForeignKey
+from sqlalchemy.types import LargeBinary
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.sql import func
+from jinja2 import Markup
 #from flask.ext.login import UserMixin
 #from flask_login import UserMixin
 
@@ -19,6 +21,7 @@ class Graphics(Base):
     last_updated = Column(DateTime, server_default=func.now())
     name = Column(String)
     image = Column(LargeBinary)
+    path = Column(String)
 
 class User(Base):
 

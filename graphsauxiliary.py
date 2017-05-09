@@ -2,10 +2,17 @@ import matplotlib
 import auxiliary
 import dbmodel
 import sqlalchemy
+import numpy as np
+from matplotlib import mlab
+import os
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+from time import sleep
+
 
 machinehandler = auxiliary.machine_handler()
 ferramenta = auxiliary.ostools()
-session = auxiliary.user_handlers()
+session = ferramenta.dbconnection(11, 11, 11, 11)
 compliancehandler = auxiliary.compliance_handlers()
 
 
@@ -25,12 +32,13 @@ def Generate_positive_attr():
 		plt.bar(y, attr_machine_list)
 		plt.xlabel('Number of positive attributes')
 		plt.ylabel('Number of machines')
-		legenda = mpatches.patch(color='blue', label='X = MachineID')
+		legenda = mpatches.Patch(color='blue', label='X = MachineID')
 		plt.legend(handles=[legenda])
 		plt.savefig('positive_attr')
 
 
 def Generate_safe_pie():
+	labels = 'Compliance' , 'N-Compliance'
 	safecount = 0
 	falsecount = 0
 	foundmachines = machinehandler.get_all_safe(session)
@@ -95,8 +103,12 @@ def Generate_pie_severity():
 	ax1.axis('equal')
 	plt.savefig('pie_severity')
 
+
+os.chdir("/home/rh1n0/projects/linux-compliance-manager/static")
 while True:
 	Generate_pie_severity()
 	Generate_positive_attr()
 	Generate_safe_pie()
 	Generate_severity_plot()
+	print "Sleeping"
+	sleep(100)

@@ -13,6 +13,7 @@ from dbmodel import User
 from dbmodel import Machine
 from dbmodel import Compliance_attr
 from dbmodel import BossHelper
+from dbmodel import Graphics
 from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
 from wtforms import StringField, PasswordField, BooleanField
@@ -23,7 +24,8 @@ import matplotlib.patches as mpatches
 import os.path as op
 from flask_admin.contrib.fileadmin import FileAdmin
 from flask_admin import BaseView, expose
-
+from jinja2 import Markup
+from flask import url_for
 
 usuario = "Doidoteste"
 
@@ -101,6 +103,8 @@ admin.add_view(MyModelView(Machine, session,editable_columns=['ip', 'nome', 'com
 admin.add_view(MyModelView(Compliance_attr, session))
 admin.add_view(MyModelView(BossHelper, session))
 admin.add_view(NotificationsView(name='Notifications', endpoint='notify'))
+admin.add_view(MyModelView(Graphics, session))
+
 
 
 #class Myform(BaseForm):
