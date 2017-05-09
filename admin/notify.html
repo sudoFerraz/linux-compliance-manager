@@ -1,9 +1,14 @@
 {% extends 'admin/master.html' %}
+{% block head_css %}
+{{ super() }}
+
+{% endblock head_css %}
+
 {% block body %}
 
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<i class="fa fa-bell fa-fw"></i> Notifications Panel
+							<i class="fa fa-bell fa-fw"></i> Notifications Panel{{doido}}
 						</div>
 						<div class="panel-body">
 							<div class="list-group">
@@ -26,7 +31,6 @@
 								</a>
 								<a href="#" class="list-group-item">
 									<i class="fa fa-comment fa-fw"></i>
-									Servidor Teste
 									<span class="pull-right text-muted small"><em>Teste</em></span>
 								</a>
 							</div>

@@ -29,6 +29,7 @@ from flask import url_for
 from flask_admin import form
 import os
 from dbmodel import Image
+import jinja2
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 file_path = os.path.join(basedir, 'static')
@@ -47,10 +48,6 @@ app.config['SECRET_KEY'] = 'postgres'
 
 db = SQLAlchemy(app)
 
-class NotificationsView(BaseView):
-	@expose('/')
-	def index(self):
-		return self.render('admin/notify.html')
 
 admin = Admin(app, template_mode='bootstrap3')
 
@@ -135,6 +132,16 @@ class ComplianceView(ModelView):
 	column_list = ('machineid', 'observacoes', 'proposito', 'particionamento')
 
 
+class NotificationsView(BaseView):
+	@expose('/')
+	def index(self):
+		return self.render('admin/notify.html', doido="doido")
+
+class AdminView(BaseView):
+	@expose('/')
+	def admin(self):
+		return render_template('admin/index.html', doido="doido")
+
 
 path = op.join(op.dirname(__file__), 'static')
 admin.add_view(FileAdmin(path, '/static/', name='Static Files'))
@@ -143,7 +150,6 @@ admin.add_view(MyModelView(Machine, session,editable_columns=['ip', 'nome', 'com
 admin.add_view(MyModelView(Compliance_attr, session))
 admin.add_view(MyModelView(BossHelper, session))
 admin.add_view(NotificationsView(name='Notifications', endpoint='notify'))
-
 
 
 #class Myform(BaseForm):
