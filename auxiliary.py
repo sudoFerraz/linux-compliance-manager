@@ -202,8 +202,7 @@ class machine_handler(object):
 			print "Maquina nao encontrada, tente novamente"
 			return False
 
-	def get_all_machines(self,session):
-		"""Retornando em forma de print, nao retorna nenhum objeto"""
+	def get_all_machines(self, session):
 		j = PrettyTable(['MachineID', 'Ip', 'Nome', 'Full Compliance',\
 		 'Data verificacao'])
 		foundmachines = session.query(Machine).order_by(Machine.scanned)

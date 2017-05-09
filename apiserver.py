@@ -22,10 +22,10 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import os.path as op
 from flask_admin.contrib.fileadmin import FileAdmin
+from flask_admin import BaseView, expose
 
 
-
-
+usuario = "Doidoteste"
 
 class LoginForm(FlaskForm):
 	username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
@@ -38,6 +38,11 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhos
 app.config['SECRET_KEY'] = 'postgres'
 
 db = SQLAlchemy(app)
+
+class NotificationsView(BaseView):
+	@expose('/')
+	def index(self):
+		return self.render('admin/notify.html')
 
 admin = Admin(app, template_mode='bootstrap3')
 
@@ -95,6 +100,7 @@ admin.add_view(MyModelView(User, session,editable_columns=['user', 'name', 'pass
 admin.add_view(MyModelView(Machine, session,editable_columns=['ip', 'nome', 'compliance', 'scanned', 'to_scan', 'to_apply', 'user', 'password'], list_columns=['ip', 'nome', 'compliance', 'scanned', 'to_scan', 'to_apply']))
 admin.add_view(MyModelView(Compliance_attr, session))
 admin.add_view(MyModelView(BossHelper, session))
+admin.add_view(NotificationsView(name='Notifications', endpoint='notify'))
 
 
 #class Myform(BaseForm):
