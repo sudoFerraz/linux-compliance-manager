@@ -26,8 +26,14 @@ from flask_admin.contrib.fileadmin import FileAdmin
 from flask_admin import BaseView, expose
 from jinja2 import Markup
 from flask import url_for
+from flask_admin import form
+import os
+from dbmodel import Image
 
-usuario = "Doidoteste"
+basedir = os.path.abspath(os.path.dirname(__file__))
+file_path = os.path.join(basedir, 'static')
+
+
 
 class LoginForm(FlaskForm):
 	username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
@@ -71,6 +77,40 @@ def get_machine_graph():
 
 
 
+class ImageView(ModelView):
+    def _list_thumbnail(view, context, model, name):
+        if not model.path:
+            return ''
+
+        return Markup(
+            '<img src="%s">' %
+            url_for('static',
+                    filename=form.thumbgen_filename(model.path))
+        )
+
+    column_formatters = {
+        'path': _list_thumbnail
+    }
+
+    form_extra_fields = {
+        'path': form.ImageUploadField(
+            'Image', base_path=file_path, thumbnail_size=(100, 100, True))
+    }
+
+admin.add_view(ImageView(Image, session))
+
+
+@app.route('/_image-url')
+def _get_image_url():
+    img_id = request.args.get('img_id')
+    img = Image.query.get(img_id)
+    if img is None:
+        response = jsonify(status='not found')
+        return response
+    return jsonify(img_path=img.path, status='ok')
+
+
+
 @app.teardown_request
 def app_teardown(response_or_exc):
     # Assuming that `session` is your scoped session 
@@ -103,7 +143,6 @@ admin.add_view(MyModelView(Machine, session,editable_columns=['ip', 'nome', 'com
 admin.add_view(MyModelView(Compliance_attr, session))
 admin.add_view(MyModelView(BossHelper, session))
 admin.add_view(NotificationsView(name='Notifications', endpoint='notify'))
-admin.add_view(MyModelView(Graphics, session))
 
 
 

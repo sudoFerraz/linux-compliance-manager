@@ -8,6 +8,8 @@ import os
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from time import sleep
+from matplotlib import rcParams
+rcParams.update({'figure.autolayout': True})
 
 
 machinehandler = auxiliary.machine_handler()
@@ -34,6 +36,7 @@ def Generate_positive_attr():
 		plt.ylabel('Number of machines')
 		legenda = mpatches.Patch(color='blue', label='X = MachineID')
 		plt.legend(handles=[legenda])
+		plt.tight_layout()
 		plt.savefig('positive_attr')
 
 
@@ -56,6 +59,7 @@ def Generate_safe_pie():
 	fig1, ax1 = plt.subplots()
 	ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f', shadow=True, startangle=90)
 	ax1.axis('equal')
+	plt.tight_layout()
 	plt.savefig('safe_pie')
 
 
@@ -75,6 +79,7 @@ def Generate_severity_plot():
 		plt.xticks(y)
 		plt.ylabel("Severity degree")
 		plt.xlabel("Machine ID")
+		plt.tight_layout()
 		plt.savefig('severity_plot')
 
 
@@ -101,6 +106,7 @@ def Generate_pie_severity():
 	fig1, ax1 = plt.subplots()
 	ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%', shadow=True, startangle=90)
 	ax1.axis('equal')
+	plt.tight_layout()
 	plt.savefig('pie_severity')
 
 

@@ -11,8 +11,25 @@ from sqlalchemy.sql import func
 from jinja2 import Markup
 #from flask.ext.login import UserMixin
 #from flask_login import UserMixin
+import os
+from flask.ext.admin import Admin
+from flask_admin.contrib.sqla import ModelView
 
+
+
+basedir = os.path.abspath(os.path.dirname(__file__))
+file_path = os.path.join(basedir, 'static')
 Base = declarative_base()
+
+
+class Image(Base):
+    __tablename__ = "image"
+    id = Column(Integer, primary_key=True)
+    name = Column(String(128))
+    path = Column(String, unique=True)
+
+    def __repr__(self):
+        return self.name
 
 class Graphics(Base):
 
