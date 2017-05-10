@@ -85,7 +85,7 @@ def Generate_severity_plot():
 
 def Generate_pie_severity():
 	x,y,z = 0,0,0
-	labels = 'Grupo de Baixo Risco', 'Grupo de Medio Risco', 'Grupo de Alto Risco'
+	labels = 'Baixo', 'Medio', 'Alto'
 	severity_machine_list = []
 	id_machine_list = []
 	foundmachines = machinehandler.get_all_machines(session)

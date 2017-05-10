@@ -1,1 +1,88 @@
-<div>Teste</div>
+{% extends 'admin/master.html' %}
+{% block head_css %}
+{{ super() }}
+
+{% endblock head_css %}
+
+
+{% block body %}
+{{ super() }}
+				<div class="col-lg-3 col-md-6">
+					<div class ="panel panel-primary">
+						<div class="panel-heading">
+							<div class="row">
+								<div class="col-xs-3">
+									<i class="fa fa-comments fa-5x"></i>
+								</div>
+								<div class="col-xs-9 text-right">
+									<div class="huge">26</div>
+									<div>Maquinas compliance {{doido}} {{ doido }}</div>
+								</div>
+							</div>
+						</div>
+						<div>
+							<a href="#"><span class="pull-left">
+								<span class="panel-footer">
+									
+								</span>
+							</span></a>
+						</div>
+						<img src="/static/safe_pie.png" alt="" class="img-responsive center-block" />
+						<a href="#">
+							<div class="panel-footer">
+								<span class="pull-left"> View Details</span>
+								<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+								<div class="clearfix"></div>
+							</div>
+						</a>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class ="panel panel-info">
+						<div class="panel-heading">
+							<div class="row">
+								<div class="col-xs-3">
+									<i class="fa fa-comments fa-5x"></i>
+								</div>
+								<div class="col-xs-9 text-right">
+									<div class="huge">3,9</div>
+									<div>Nivel de severidade</div>
+								</div>
+							</div>
+						</div>	
+						<img src="/static/pie_severity.png" alt="" class="img-responsive center-block" />
+						<a href="#">
+							<div class="panel-footer">
+								<span class="pull-left"> View Details</span>
+								<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+								<div class="clearfix"></div>
+							</div>
+						</a>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class ="panel panel-warning">
+						<div class="panel-heading">
+							<div class="row">
+								<div class="col-xs-3">
+									<i class="fa fa-comments fa-5x"></i>
+								</div>
+								<div class="col-xs-9 text-right">
+									<div class="huge">52</div>
+									<div>Escaneando no momento</div>
+								</div>
+							</div>
+						</div>	
+						<button class="btn btn-danger" type="button">
+  Faltando <span class="badge">4</span>
+</button>
+						<a href="#">
+							<div class="panel-footer">
+								<span class="pull-left">  {{variavel}} View Details</span>
+								<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+								<div class="clearfix"></div>
+							</div>
+						</a>
+					</div>
+				</div>
+{% endblock body %}

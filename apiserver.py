@@ -137,10 +137,15 @@ class NotificationsView(BaseView):
 	def index(self):
 		return self.render('admin/notify.html', doido="doido")
 
+class HomeView(ModelView):
+	@expose('/admin')
+	def home(self):
+		return render_template('index.html', variavel="doido")
+
 class AdminView(BaseView):
 	@expose('/')
 	def admin(self):
-		return render_template('admin/index.html', doido="doido")
+		return render_template('index.html', doido="doido")
 
 
 path = op.join(op.dirname(__file__), 'static')
@@ -333,7 +338,6 @@ def testelogin():
 	if request.method == 'POST':
 		return 
 
-
 @app.route('/')
 def index():
 	#pegar o user com um formulario
@@ -386,4 +390,5 @@ def deleteRequestHello():
 	return "Deleting your hard drive.....haha just kidding! I received a DELETE request!"
 
 app.run(host='0.0.0.0')
+
 

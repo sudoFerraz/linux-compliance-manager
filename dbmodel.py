@@ -22,6 +22,13 @@ file_path = os.path.join(basedir, 'static')
 Base = declarative_base()
 
 
+class Notifications(Base):
+    __tablename__ = "notifications"
+    id = Column(Integer, primary_key=True)
+    evento = Column(String)
+    source = Column(String)
+    tempo = Column(DateTime, server_default=func.now())
+
 class Image(Base):
     __tablename__ = "image"
     id = Column(Integer, primary_key=True)
