@@ -59,6 +59,57 @@ compliancehandler = auxiliary.compliance_handlers()
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+#Variaveis de templating
+#################
+
+last_scanned_list = []
+great_severity_list = []
+compliance_list = []
+to_scan_list = []
+
+
+#################
+
+def get_context_variables():
+	sortedlist = []
+	foundmachines = machinehandler.get_all_machines(session)
+	for machine in foundmachines:
+		last_scanned_list.append(machine)
+	for machine in foundmachines:
+		if machine.compliace == True:
+			compliance_list.append(machine)
+	for machine in foundmachines:
+		if machine.to_scan == True:
+			to_scan_list.append(machine)
+	#for machine in foundmachines:
+	#	sortedlist.append(machine.severity)
+	#for severity in sorted(sortedlist):
+	#	for machine in foundmachines:
+	#		if machine.severity == severity:
+	#			great_severity_list.append(machine)
+
+
+@app.context_processor
+def pass_context_variables():
+	foundmachines = machinehandler.get_all_machines(session)
+	for machine in foundmachines:
+		last_scanned_list.append(machine)
+	for machine in foundmachines:
+		if machine.compliance == True:
+			compliance_list.append(machine)
+	for machine in foundmachines:
+		if machine.to_scan == True:
+			to_scan_list.append(machine)
+	print to_scan_list[0].nome
+	return dict(scanned_list=last_scanned_list, severitylist=great_severity_list,
+		compliancelist=compliance_list, scanlist=to_scan_list)
+
+
+def get_context_variables():
+	pass
+
+
+
 def get_machine_graph():
 	safecount = 0
 	falsecount = 0
@@ -140,7 +191,7 @@ class NotificationsView(BaseView):
 class HomeView(ModelView):
 	@expose('/admin')
 	def home(self):
-		return render_template('index.html', variavel="doido")
+		return render_template('index.html', doido="doido")
 
 class AdminView(BaseView):
 	@expose('/')
@@ -150,7 +201,7 @@ class AdminView(BaseView):
 
 path = op.join(op.dirname(__file__), 'static')
 admin.add_view(FileAdmin(path, '/static/', name='Static Files'))
-admin.add_view(MyModelView(User, session,editable_columns=['user', 'name', 'password', 'usertype'], list_columns=['user', 'name', 'password', 'usertype']))
+#admin.add_view(MyModelView(User, session,editable_columns=['user', 'name', 'password', 'usertype'], list_columns=['user', 'name', 'password', 'usertype']))
 admin.add_view(MyModelView(Machine, session,editable_columns=['ip', 'nome', 'compliance', 'scanned', 'to_scan', 'to_apply', 'user', 'password'], list_columns=['ip', 'nome', 'compliance', 'scanned', 'to_scan', 'to_apply']))
 admin.add_view(MyModelView(Compliance_attr, session))
 admin.add_view(MyModelView(BossHelper, session))
@@ -390,5 +441,6 @@ def deleteRequestHello():
 	return "Deleting your hard drive.....haha just kidding! I received a DELETE request!"
 
 app.run(host='0.0.0.0')
+app.debug(True)
 
 

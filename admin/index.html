@@ -3,10 +3,13 @@
 {{ super() }}
 
 {% endblock head_css %}
-
+{% block brand %}
+<img src="/static/logo.png" alt="" class="img-responsive center-block" />
+{% endblock brand %}
 
 {% block body %}
 {{ super() }}
+<h3>Algar linux compliance manager</h3>
 				<div class="col-lg-3 col-md-6">
 					<div class ="panel panel-primary">
 						<div class="panel-heading">
@@ -20,6 +23,7 @@
 								</div>
 							</div>
 						</div>
+
 						<div>
 							<a href="#"><span class="pull-left">
 								<span class="panel-footer">
@@ -30,7 +34,11 @@
 						<img src="/static/safe_pie.png" alt="" class="img-responsive center-block" />
 						<a href="#">
 							<div class="panel-footer">
-								<span class="pull-left"> View Details</span>
+								<span class="pull-left"> {% if scanned_list is defined %}
+								{{ scanned_list }}
+								{% else %}
+								variable is not defined
+								{% endif %}</span>
 								<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
 								<div class="clearfix"></div>
 							</div>
@@ -76,13 +84,63 @@
 						<button class="btn btn-danger" type="button">
   Faltando <span class="badge">4</span>
 </button>
-						<a href="#">
-							<div class="panel-footer">
-								<span class="pull-left">  {{variavel}} View Details</span>
-								<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-								<div class="clearfix"></div>
-							</div>
-						</a>
-					</div>
+						
 				</div>
+				 <div class="span4">
+                                    <div class="box">
+                                        <div class="body">
+                                            <table class="table table-bordered table-condensed table-hovered sortableTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Maquina <i class="icon-sort"></i><i class="icon-sort-down"></i><i
+                                                                class="icon-sort-up"></i></th>
+                                                        <th>Atributos Compliance <i class="icon-sort"></i><i class="icon-sort-down"></i><i
+                                                                class="icon-sort-up"></i></th>
+                                                        <th>Ultimo scan em <i class="icon-sort"></i><i class="icon-sort-down"></i><i
+                                                                class="icon-sort-up"></i></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Centos CTI</td>
+                                                        <td>40</td>
+                                                        <td>00:00:15</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Web Server CA</td>
+                                                        <td>30</td>
+                                                        <td>00:01:20</td>
+                                                    </tr>
+                                                    <tr class="error">
+                                                        <td>Image Control</td>
+                                                        <td>43</td>
+                                                        <td>00:00:30</td>
+                                                    </tr>
+                                                    <tr class="info">
+                                                        <td>Guarany</td>
+                                                        <td>47</td>
+                                                        <td>00:10:20</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Diamante</td>
+                                                        <td>6</td>
+                                                        <td>00:00:10</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Algar CRM</td>
+                                                        <td>7</td>
+                                                        <td>00:20:00</td>
+                                                    </tr>
+                                                    <tr class="success">
+                                                        <td>Gateway Image</td>
+                                                        <td>24</td>
+                                                        <td>00:10:00</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
 {% endblock body %}

@@ -13,10 +13,29 @@ compliancehandler = auxiliary.compliance_handlers()
 
 session = ferramenta.dbconnection(11, 11, 11, 11)
 
+notifications = []
+
 def fabric_checklist_scan(session, ip, user, password):
 	out = os.popen('sudo fab -H'+user+'@'+ip+' -p '+password+' checklist:\''+ip+'\'').read()
 def fabric_checklist_apply(session, ip):
 	pass
+
+def notifications_refresh(evento, source, tempo):
+	if evento == "scan":
+		notifications.append("Escaneando maquina " + source)
+	elif evento == "erro":
+		notifications.append("Erro durante o procedimento " + source)
+	elif evento == "graphics":
+		notifications.append("Gerando grafico " + source)
+	elif evento == "new":
+		notifications.append("Nova maquina no destino " + source)
+	elif evento == "":
+		pass
+
+def alimenta_template():
+	session.
+
+
 
 while True:
 	foundmachines = machinehandler.get_all_machines(session)
