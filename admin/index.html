@@ -34,11 +34,9 @@
 						<img src="/static/safe_pie.png" alt="" class="img-responsive center-block" />
 						<a href="#">
 							<div class="panel-footer">
-								<span class="pull-left"> {% if scanned_list is defined %}
-								{{ scanned_list }}
-								{% else %}
-								variable is not defined
-								{% endif %}</span>
+								<span class="pull-left"> {% for machine in scanned_list %}
+								{{ machine.nome }}
+								{% endfor %}</span>
 								<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
 								<div class="clearfix"></div>
 							</div>
@@ -101,41 +99,16 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td>Centos CTI</td>
-                                                        <td>40</td>
-                                                        <td>00:00:15</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Web Server CA</td>
-                                                        <td>30</td>
-                                                        <td>00:01:20</td>
-                                                    </tr>
-                                                    <tr class="error">
-                                                        <td>Image Control</td>
-                                                        <td>43</td>
-                                                        <td>00:00:30</td>
-                                                    </tr>
-                                                    <tr class="info">
-                                                        <td>Guarany</td>
-                                                        <td>47</td>
-                                                        <td>00:10:20</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Diamante</td>
-                                                        <td>6</td>
-                                                        <td>00:00:10</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Algar CRM</td>
-                                                        <td>7</td>
-                                                        <td>00:20:00</td>
-                                                    </tr>
-                                                    <tr class="success">
-                                                        <td>Gateway Image</td>
-                                                        <td>24</td>
-                                                        <td>00:10:00</td>
-                                                    </tr>
+                                                {% for machine in scanned_list %}
+                                                <tr>
+                                                <td>{{ machine.nome }}</td>
+                                                <td>Fazer severity no db</td>
+                                                <td>{{ machine.scanned }}</td>
+                                                </tr>
+
+                                                {% endfor %}
+
+
                                                 </tbody>
                                             </table>
                                         </div>

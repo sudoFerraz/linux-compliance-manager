@@ -88,7 +88,7 @@ def get_context_variables():
 	#		if machine.severity == severity:
 	#			great_severity_list.append(machine)
 
-
+"""
 @app.context_processor
 def pass_context_variables():
 	foundmachines = machinehandler.get_all_machines(session)
@@ -103,7 +103,7 @@ def pass_context_variables():
 	print to_scan_list[0].nome
 	return dict(scanned_list=last_scanned_list, severitylist=great_severity_list,
 		compliancelist=compliance_list, scanlist=to_scan_list)
-
+"""
 
 def get_context_variables():
 	pass
@@ -188,6 +188,11 @@ class NotificationsView(BaseView):
 	def index(self):
 		return self.render('admin/notify.html', doido="doido")
 
+class CalendarView(BaseView):
+	@expose('/')
+	def index(self):
+		return self.render('admin/calendar.html', doido="doido")
+
 class HomeView(ModelView):
 	@expose('/admin')
 	def home(self):
@@ -206,6 +211,7 @@ admin.add_view(MyModelView(Machine, session,editable_columns=['ip', 'nome', 'com
 admin.add_view(MyModelView(Compliance_attr, session))
 admin.add_view(MyModelView(BossHelper, session))
 admin.add_view(NotificationsView(name='Notifications', endpoint='notify'))
+admin.add_view(CalendarView(name='Calendario', endpoint='calendar'))
 
 
 #class Myform(BaseForm):

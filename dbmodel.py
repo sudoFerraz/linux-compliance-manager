@@ -80,8 +80,8 @@ class Machine(Base):
     scanned = Column(DateTime, server_default=func.now())
     to_scan = Column(Boolean)
     to_apply = Column(Boolean)
-    #severity = Column(Integer)
-    #compliance_nro = Column(Integer)
+    severity = Column(Integer)
+    compliance_nro = Column(Integer)
 
     def __repr__(self):
         return "Machine Nome : %s, Ip : %s " %(self.nome, self.ip)
