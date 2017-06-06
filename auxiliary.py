@@ -578,7 +578,3 @@ now = time.strftime("%c")
 print now
 
 
-
-#os.chdir('')
-#os.makedirs('')
-#os.listdir()
